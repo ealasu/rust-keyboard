@@ -3,17 +3,27 @@
 
 #[macro_use] extern crate teensy3;
 
+mod circular_buffer;
+
+use circular_buffer::CircularBuffer;
 use teensy3::bindings as t;
 use teensy3::serial::Serial;
 
+static mut RIGHT_KEYS: CircularBuffer<u8> = CircularBuffer {
+    data: [0; 4],
+    write_pos: 0,
+};
+
 #[no_mangle]
 pub unsafe extern fn main() {
+    t::Wire.begin2(44);
+    t::Wire.onReceive(Some(on_receive));
+
     // Blink Loop
 
     t::pinMode(13, t::OUTPUT as u8);
     t::digitalWrite(13, t::LOW as u8);
-    let mut ser = Serial{};
-
+    let ser = Serial{};
     loop {
         // Show we are alive
         alive();
@@ -44,8 +54,8 @@ fn hello(ser: &Serial) -> Result<(),()> {
     ser.write_bytes(msg.as_bytes())
 }
 
-
-fn setup_wire() {
-    t::
+pub unsafe extern fn on_receive(c: i32) {
+    for _ in 0..c {
+        RIGHT_KEYS.push(t::Wire.read() as u8);
+    }
 }
-

@@ -1,3 +1,8 @@
+paths = [
+  "../../teensy3-rs/teensy3",
+  "../../teensy3-rs/teensy3-sys",
+  ]
+
 [build]
 target = "thumbv7em-none-eabi"
 

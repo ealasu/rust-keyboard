@@ -6,12 +6,12 @@ byte val = 0;
 static int ROW_PINS[] = {
   1, 2, 3
 };
-#define ROW_PINS_LEN (sizeof(row_pins) / sizeof(row_pins[0]))
+#define ROW_PINS_LEN (sizeof(ROW_PINS) / sizeof(ROW_PINS[0]))
 
 static int COL_PINS[] = {
   1, 2, 3
 };
-#define COL_PINS_LEN (sizeof(col_pins) / sizeof(col_pins[0]))
+#define COL_PINS_LEN (sizeof(COL_PINS) / sizeof(COL_PINS[0]))
 
 void setup()
 {
@@ -64,7 +64,7 @@ void loop_real() {
   }
 
   Wire.beginTransmission(44);
-  Wire.write(&pressed_keys, 4);
+  Wire.write((uint8_t*) &pressed_keys, 4);
   //Wire.write(val);
   //val += 1;
   Wire.endTransmission();

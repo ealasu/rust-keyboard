@@ -1,14 +1,12 @@
 [package]
-name = "left-half"
+name = "keyboard-left-half"
 version = "0.1.0"
-
-[dependencies]
-teensy3 = { path = "../../teensy3-rs/teensy3" }
+build = "build.rs"
 
 [profile.dev]
+lto = false
 panic = "abort"
-lto = true
 
 [profile.release]
-panic = "abort"
 lto = true
+panic = "abort"

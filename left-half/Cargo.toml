@@ -7,6 +7,8 @@ teensy3 = { path = "../../teensy3-rs/teensy3" }
 
 [profile.dev]
 panic = "abort"
+lto = true
 
 [profile.release]
 panic = "abort"
+lto = true

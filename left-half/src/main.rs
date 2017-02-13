@@ -3,6 +3,7 @@
 
 extern crate board;
 extern crate cortex_m;
+extern crate teensy;
 
 use board::periph;
 use cortex_m::asm::nop;
@@ -19,6 +20,8 @@ pub unsafe fn main() -> ! {
 
     // Set the led pin to output
     periph::ptb().pddr.modify(|_, w| w.pdd(LED_PIN));
+
+    teensy::usb_init();
 
     blink_led();
 }

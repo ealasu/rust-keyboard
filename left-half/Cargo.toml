@@ -1,8 +1,8 @@
 [package]
 name = "keyboard-left-half"
 version = "0.1.0"
-build = true
 
 [dependencies]
 board = { path = "../../rust-mchck-template" }
 cortex-m = "*"
+teensy = { path = "teensy" }

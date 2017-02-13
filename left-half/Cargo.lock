@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "board 0.1.0",
  "cortex-m 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "teensy 0.1.0",
 ]
 
 [[package]]
@@ -47,6 +48,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "rustc-cfg"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "teensy"
+version = "0.1.0"
+dependencies = [
+ "gcc 0.3.43 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "volatile-register"

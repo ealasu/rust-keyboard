@@ -1,12 +1,8 @@
 [package]
 name = "keyboard-left-half"
 version = "0.1.0"
-build = "build.rs"
+build = true
 
-[profile.dev]
-lto = false
-panic = "abort"
-
-[profile.release]
-lto = true
-panic = "abort"
+[dependencies]
+board = { path = "../../rust-mchck-template" }
+cortex-m = "*"

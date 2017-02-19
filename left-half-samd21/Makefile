@@ -1,0 +1,2 @@
+flash:
+	rsync -avc .pioenvs/tau/firmware.bin b:~/ && ssh b /home/debian/BOSSA/bin/bossac -i -d --port=ttyACM0 -e -w -v -b /home/debian/firmware.bin -R

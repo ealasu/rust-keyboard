@@ -1096,6 +1096,7 @@ void usb_init(void)
 	//serial_print("usb_init\n");
 
 	usb_init_serialnumber();
+	return;
 
 	for (i=0; i <= NUM_ENDPOINTS*4; i++) {
 		table[i].desc = 0;

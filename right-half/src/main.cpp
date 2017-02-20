@@ -18,37 +18,8 @@ static int COL_PINS[] = {
 };
 #define COL_PINS_LEN (sizeof(COL_PINS) / sizeof(COL_PINS[0]))
 
-/*
-void setup_blink()
-{
-  pinMode(RED_LED, OUTPUT);
-}
-
-void loop_blink()
-{
-  // turn the LED on (HIGH is the voltage level)
-  digitalWrite(RED_LED, HIGH);
-
-  // wait for a second
-  delay(1000);
-
-  // turn the LED off by making the voltage LOW
-  digitalWrite(RED_LED, LOW);
-
-   // wait for a second
-  delay(1000);
-}
-*/
-
-
 void setup() {
-  //Wire.setModule(0);
-  //Wire.begin();
-
-  //Serial.begin(9600);
-  //Serial.println("Start!");
-
-  pinMode(RED_LED, OUTPUT);
+  Serial.begin(9600);
 
   /*
   // initialize pins
@@ -66,10 +37,6 @@ void setup() {
 }
 
 void loop() {
-  //digitalWrite(RED_LED, HIGH);
-  //delay(500);
-  //digitalWrite(RED_LED, LOW);
-  //delay(500);
   kbd_run_loop();
   
   /*
@@ -88,22 +55,4 @@ void loop() {
     delay(100);
   }
   */
-
-  //Serial.println("begin...");
-
-  //Wire.beginTransmission(0x66);
-  //Serial.println("writing...");
-  //for (int i = 0; i < 10*1024; i++) {
-    //for (int j = 0; i < 10; j++) {
-      //Wire.write((uint8_t*) &pressed_keys, 4);
-    //}
-  //}
-  //Wire.write("hi");
-  //Serial.println("done writing...");
-    //Wire.write(val);
-    //val += 1;
-  //Wire.endTransmission();
-  //Serial.println("ended.");
-
-  //delay(100);
 }

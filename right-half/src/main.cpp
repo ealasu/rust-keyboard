@@ -1,5 +1,6 @@
 #include <Energia.h>
-#include <Wire.h>
+//#include <Wire.h>
+#include "kbd.h"
 
 byte val = 0;
 
@@ -42,12 +43,12 @@ void loop_blink()
 
 void setup() {
   //Wire.setModule(0);
-  Wire.begin();
+  //Wire.begin();
 
-  Serial.begin(9600);
-  Serial.println("Start!");
+  //Serial.begin(9600);
+  //Serial.println("Start!");
 
-  //pinMode(RED_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
 
   /*
   // initialize pins
@@ -65,7 +66,11 @@ void setup() {
 }
 
 void loop() {
+  //digitalWrite(RED_LED, HIGH);
+  //delay(500);
   //digitalWrite(RED_LED, LOW);
+  //delay(500);
+  kbd_run_loop();
   
   /*
   unsigned long pressed_keys = 0; // u32
@@ -84,21 +89,21 @@ void loop() {
   }
   */
 
-  Serial.println("begin...");
+  //Serial.println("begin...");
 
-  Wire.beginTransmission(0x66);
-  Serial.println("writing...");
+  //Wire.beginTransmission(0x66);
+  //Serial.println("writing...");
   //for (int i = 0; i < 10*1024; i++) {
     //for (int j = 0; i < 10; j++) {
       //Wire.write((uint8_t*) &pressed_keys, 4);
     //}
   //}
-  Wire.write("hi");
-  Serial.println("done writing...");
+  //Wire.write("hi");
+  //Serial.println("done writing...");
     //Wire.write(val);
     //val += 1;
-  Wire.endTransmission();
-  Serial.println("ended.");
+  //Wire.endTransmission();
+  //Serial.println("ended.");
 
-  delay(100);
+  //delay(100);
 }

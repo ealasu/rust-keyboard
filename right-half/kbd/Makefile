@@ -1,0 +1,2 @@
+all:
+	xargo build --release

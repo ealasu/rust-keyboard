@@ -1,5 +1,5 @@
 [root]
-name = "kbd"
+name = "kbd_left_half"
 version = "0.1.0"
 dependencies = [
  "compiler_builtins 0.1.0 (git+https://github.com/rust-lang-nursery/compiler-builtins)",

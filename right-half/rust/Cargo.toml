@@ -1,5 +1,5 @@
 [package]
-name = "kbd"
+name = "kbd_right_half"
 version = "0.1.0"
 
 [dependencies]

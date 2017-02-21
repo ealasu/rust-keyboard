@@ -6,7 +6,7 @@ build-arduino:
 	platformio run
 
 build-rust:
-	cd kbd; make
+	cd rust; make
 
 flash: build
 	#platformio run --target upload

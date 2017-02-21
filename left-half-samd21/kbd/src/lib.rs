@@ -15,7 +15,6 @@ extern crate wiring;
 #[macro_use]
 mod macros;
 mod lang_items;
-//mod wiring;
 
 use cortex_m::asm::nop;
 use wiring::PinMode::*;

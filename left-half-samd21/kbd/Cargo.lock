@@ -7,6 +7,7 @@ dependencies = [
  "cortex-m-semihosting 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "r0 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "volatile-register 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wiring 0.1.0",
 ]
 
 [[package]]
@@ -50,6 +51,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "volatile-register"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "wiring"
+version = "0.1.0"
 
 [metadata]
 "checksum compiler_builtins 0.1.0 (git+https://github.com/rust-lang-nursery/compiler-builtins)" = "<none>"

@@ -2,6 +2,9 @@
 name = "kbd"
 version = "0.1.0"
 
+[dependencies]
+wiring = { path = "../../wiring" }
+
 [lib]
 crate-type = ["staticlib"]
 

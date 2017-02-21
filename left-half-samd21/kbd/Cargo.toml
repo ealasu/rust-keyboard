@@ -9,6 +9,7 @@ crate-type = ["staticlib"]
 cortex-m = "0.1.6"
 r0 = "0.2.0"
 volatile-register = "0.1.2"
+wiring = { path = "../../wiring" }
 
 [dependencies.cortex-m-semihosting]
 optional = true

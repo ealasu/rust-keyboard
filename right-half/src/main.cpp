@@ -56,3 +56,11 @@ void loop() {
   }
   */
 }
+
+extern "C" int8_t serial_write(uint8_t b) {
+  return Serial.write(b);
+}
+
+extern "C" int serial_read() {
+  return Serial.read();
+}

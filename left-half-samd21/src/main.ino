@@ -16,3 +16,15 @@ void loop() {
 
   kbd_run_loop();
 }
+
+extern "C" int8_t serial_write(uint8_t b) {
+  //if (Serial.availableWrite() <= 0) {
+    //return 0;
+  //}
+  return Serial1.write(b);
+  //return 1;
+}
+
+extern "C" int serial_read() {
+  return Serial1.read();
+}

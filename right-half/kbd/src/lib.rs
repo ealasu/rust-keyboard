@@ -1,10 +1,11 @@
 #![feature(lang_items)]
 #![no_std]
 
-mod lang_items;
-mod wiring;
+extern crate wiring;
 
-const LED: u8 = 2;
+mod lang_items;
+
+const LED: usize = 2;
 
 #[no_mangle]
 pub extern fn kbd_run_loop() {
@@ -14,5 +15,6 @@ pub extern fn kbd_run_loop() {
         wiring::delay(300);
         wiring::digital_write(LED, wiring::PinState::Low);
         wiring::delay(300);
+        wiring::serial_write(59);
     }
 }

@@ -2,6 +2,7 @@
 #![no_std]
 
 extern crate wiring;
+extern crate kbd;
 
 mod lang_items;
 

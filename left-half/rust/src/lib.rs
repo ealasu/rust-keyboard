@@ -11,6 +11,7 @@ extern crate compiler_builtins;
 #[macro_use]
 extern crate cortex_m;
 extern crate wiring;
+extern crate kbd;
 
 #[macro_use]
 mod macros;

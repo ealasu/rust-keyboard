@@ -1,7 +1,0 @@
-[package]
-name = "teensy"
-version = "0.1.0"
-build = true
-
-[build-dependencies]
-gcc = "*"

@@ -16,6 +16,6 @@ pub extern fn kbd_run_loop() {
         wiring::delay(300);
         wiring::digital_write(LED, wiring::PinState::Low);
         wiring::delay(300);
-        wiring::serial_write(59);
+        wiring::serial_write(59); // ';'
     }
 }

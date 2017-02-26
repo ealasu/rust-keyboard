@@ -1,0 +1,7 @@
+[workspace]
+members = [
+  "kbd",
+  "wiring",
+  "left-half/rust",
+  "right-half/rust",
+]

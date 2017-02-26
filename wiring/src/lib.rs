@@ -68,10 +68,15 @@ pub fn serial_read() -> Option<u8> {
     }
 }
 
+pub fn debug_serial_write(v: u8) -> u8 {
+    unsafe { sys::debug_serial_write(v) }
+}
+
 mod sys {
     extern {
         pub fn delay(ms: u32);
         pub fn serial_write(b: u8) -> u8;
+        pub fn debug_serial_write(b: u8) -> u8;
     }
 
     #[cfg(target_arch = "msp430")]

@@ -1,4 +1,5 @@
 #include <Energia.h>
+#include <HardwareSerial.h>
 //#include <Wire.h>
 #include "kbd.h"
 
@@ -37,7 +38,7 @@ void setup() {
 }
 
 void loop() {
-  kbd_run_loop();
+  //kbd_run_loop();
   
   /*
   unsigned long pressed_keys = 0; // u32
@@ -55,6 +56,11 @@ void loop() {
     delay(100);
   }
   */
+  //Serial.write(59);
+  Serial.write(65);
+  Serial.write(65);
+  Serial.print("Hi");
+  delay(50);
 }
 
 extern "C" int8_t serial_write(uint8_t b) {

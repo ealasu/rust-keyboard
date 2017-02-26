@@ -2,6 +2,7 @@ all: build
 
 clean:
 	platformio run --target=clean
+	rm -rf rust/target
 
 build: build-rust build-arduino
 
@@ -12,5 +13,5 @@ build-rust:
 	cd rust; make
 
 flash: build
-	rsync -avc .pioenvs/tau/firmware.bin b:~/ && ssh b /home/debian/BOSSA/bin/bossac -i -d --port=ttyACM0 -e -w -v -b /home/debian/firmware.bin -R
+	rsync -avc .pioenvs/tau/firmware.bin b:/tmp/firmware-left.bin && ssh b /home/debian/BOSSA/bin/bossac -i -d --port=ttyACM0 -e -w -v -b /tmp/firmware-left.bin -R
 

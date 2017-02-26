@@ -4,3 +4,4 @@
 
 pub mod crc8;
 pub mod msg;
+pub mod msg_reader;

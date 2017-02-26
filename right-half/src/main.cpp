@@ -1,6 +1,4 @@
 #include <Energia.h>
-#include <HardwareSerial.h>
-//#include <Wire.h>
 #include "kbd.h"
 
 byte val = 0;

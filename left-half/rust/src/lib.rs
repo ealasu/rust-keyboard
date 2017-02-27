@@ -25,39 +25,33 @@ const LED: usize = 26;
 
 #[no_mangle]
 pub extern fn kbd_run_loop() {
+    // flash the LED once
     wiring::pin_mode(LED, Output);
     wiring::digital_write(LED, High);
     delay_with_nop();
     wiring::digital_write(LED, Low);
 
-    wiring::debug_serial_write('h' as u8);
-    wiring::debug_serial_write('i' as u8);
-    wiring::debug_serial_write('\n' as u8);
+    let mut msg_reader = kbd::msg_reader::MsgReader::new();
+    let left_matrix = kbd::matrix::Matrix {
+        row_pins: &[],
+        col_pins: &[],
+    };
+    left_matrix.init();
+    let mut decoder = kbd::decoder::Decoder::new();
+
+    let mut right_keys = 0;
 
     loop {
-        let v = wiring::serial_read();
-        if let Some(v) = v {
-            //wiring::debug_serial_write('y' as u8);
-            wiring::debug_serial_write(v);
+        while let Some(v) = wiring::serial_read() {
+            if let Some(scan) = msg_reader.read(v) {
+                right_keys = scan.0;
+            }
         }
-        //} else {
-            //wiring::debug_serial_write('n' as u8);
-        //}
-
-        //if v == Some(58) {
-            //wiring::digital_write(LED, High);
-            //delay_with_nop();
-            //wiring::digital_write(LED, Low);
-        //}
-        //delay_with_nop();
-        //if let Some(v) = v {
-            //wiring::debug_serial_write('s' as u8);
-            //wiring::debug_serial_write('\n' as u8);
-            //wiring::debug_serial_write(v);
-            //wiring::debug_serial_write('\n' as u8);
-        //} else {
-            //wiring::debug_serial_write('n' as u8);
-        //}
+        let left_keys = left_matrix.scan();
+        decoder.update(left_keys, right_keys, |state| {
+            // TODO send to usb
+            wiring::debug_serial_write('u' as u8);
+        });
     }
 }
 

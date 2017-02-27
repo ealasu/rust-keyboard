@@ -33,8 +33,12 @@ pub extern fn kbd_run_loop() {
 
     let mut msg_reader = kbd::msg_reader::MsgReader::new();
     let left_matrix = kbd::matrix::Matrix {
-        row_pins: &[],
-        col_pins: &[],
+        row_pins: &[
+            // TODO
+        ],
+        col_pins: &[
+            // TODO
+        ],
     };
     left_matrix.init();
     let mut decoder = kbd::decoder::Decoder::new();

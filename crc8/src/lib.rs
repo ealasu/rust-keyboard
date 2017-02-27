@@ -1,5 +1,6 @@
-const POLY_CRC8: u8 = 0x07;
-const POLY_MAXIM: u8 = 0x31;
+#![no_std]
+
+pub mod predefined;
 
 pub struct Crc8 {
     table: [u8; 256],
@@ -15,9 +16,6 @@ impl Crc8 {
         Crc8 { table: table }
     }
 
-    pub fn new_maxim() -> Self {
-        Self::new(POLY_MAXIM, true)
-    }
 
     #[inline]
     pub fn calc_byte(&self, crc: u8, v: u8) -> u8 {
@@ -89,7 +87,7 @@ mod tests {
 
     #[test]
     fn test_maxim() {
-        let crc = Crc8::new_maxim();
+        let crc = Crc8::new(predefined::POLY_MAXIM, true);
         assert_eq!(crc.calc_buf(&[0x12]), 0x21);
         //assert_eq!(crc.calc_buf(&[0xFF, 0x00, 0x07, 0x5F, 0x07, 0xB7, 0x00, 0x68]),
                    //0x37);
@@ -97,7 +95,7 @@ mod tests {
 
     #[test]
     fn test_me() {
-        let crc = Crc8::new(POLY_CRC8, false);
+        let crc = Crc8::new(predefined::POLY_CRC8, false);
         //assert_eq!(crc.calc_byte(0, 0x12), 0x21);
         //assert_eq!(crc.calc_buf(&[0xFF, 0x00, 0x07, 0x5F, 0x07, 0xB7, 0x00, 0x68]),
                    //0x37);
@@ -106,7 +104,7 @@ mod tests {
     #[test]
     fn test_table_crc8() {
         assert_eq!(
-            &make_table(POLY_CRC8 as u8)[..],  &[
+            &make_table(predefined::POLY_CRC8 as u8)[..],  &[
             0, 7, 14, 9, 28, 27, 18, 21, 56, 63, 54, 49, 36, 35, 42, 45, 112, 119, 126, 121, 108,
             107, 98, 101, 72, 79,70, 65, 84, 83, 90, 93, 224, 231, 238, 233, 252, 251, 242, 245,
             216, 223, 214, 209, 196, 195, 202, 205, 144, 151, 158, 153, 140, 139, 130, 133, 168,
@@ -127,7 +125,7 @@ mod tests {
     #[test]
     fn test_table_maxim() {
         assert_eq!(
-            &make_table_r(POLY_MAXIM)[..], &[
+            &make_table_r(predefined::POLY_MAXIM)[..], &[
             0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65, 157, 195, 33, 127,
             252, 162, 64, 30, 95, 1, 227, 189, 62, 96, 130, 220, 35, 125, 159, 193, 66, 28, 254, 160,
             225, 191, 93, 3, 128, 222, 60, 98, 190, 224, 2, 92, 223, 129, 99, 61, 124, 34, 192, 158, 29,

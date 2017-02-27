@@ -1,7 +1,6 @@
 #![no_std]
 
-#[macro_use] extern crate lazy_static;
+extern crate crc8;
 
-pub mod crc8;
 pub mod msg;
 pub mod msg_reader;

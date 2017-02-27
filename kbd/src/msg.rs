@@ -1,9 +1,6 @@
-use crc8::Crc8;
+use crc8;
 
-lazy_static! {
-    static ref CRC: Crc8 = Crc8::new_maxim();
-}
-
+static CRC: &'static crc8::Crc8 = &crc8::predefined::MAXIM;
 const MAGIC: u8 = 0b10101010;
 
 #[derive(Copy, Clone, Debug, PartialEq)]

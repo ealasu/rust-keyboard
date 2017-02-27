@@ -2,12 +2,9 @@
 name = "kbd_right_half"
 version = "0.1.0"
 
-[dependencies]
-wiring = { path = "../../wiring" }
-kbd = { path = "../../kbd" }
-
 [lib]
 crate-type = ["staticlib"]
 
-[profile.release]
-lto = true
+[dependencies]
+wiring = { path = "../../wiring" }
+kbd = { path = "../../kbd" }

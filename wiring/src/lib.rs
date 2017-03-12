@@ -72,11 +72,21 @@ pub fn debug_serial_write(v: u8) -> u8 {
     unsafe { sys::debug_serial_write(v) }
 }
 
+#[repr(C)]
+pub struct KeyReport {
+  modifiers: u8,
+  reserved: u8,
+  keys: [u8; 6],
+}
+
 mod sys {
+    use super::*;
+
     extern {
         pub fn delay(ms: u32);
         pub fn serial_write(b: u8) -> u8;
         pub fn debug_serial_write(b: u8) -> u8;
+        pub fn send_key_report(keys: KeyReport);
     }
 
     #[cfg(target_arch = "msp430")]

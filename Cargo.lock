@@ -28,15 +28,6 @@ name = "crc8"
 version = "0.1.0"
 
 [[package]]
-name = "crc8_macros"
-version = "0.1.0"
-dependencies = [
- "crc8 0.1.0",
- "quote 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "syn 0.10.8 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "kbd"
 version = "0.1.0"
 dependencies = [
@@ -65,11 +56,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "quote"
-version = "0.3.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
 name = "r0"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -77,20 +63,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "rustc-cfg"
 version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "syn"
-version = "0.10.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "quote 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "unicode-xid 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "unicode-xid"
-version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -102,9 +74,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum compiler_builtins 0.1.0 (git+https://github.com/rust-lang-nursery/compiler-builtins)" = "<none>"
 "checksum cortex-m 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)" = "f636846f87391b548e55be42a3f787c76348288f8716486a7e184004b745c62d"
 "checksum cortex-m-semihosting 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "b8d27ed287c929f8f4fb30832c5e4c255c0d055a99c6b9855158f227b49f4972"
-"checksum quote 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)" = "08de3f12e670f83f61e450443cbae34496a35b665691fd8e99b24ec662f75865"
 "checksum r0 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "62dbff51d8763241abca5bbd183ba31e78c0def1d7e2cbe11d4ac3303ae75628"
 "checksum rustc-cfg 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "56a596b5718bf5e059d59a30af12f7f462a152de147aa462b70892849ee18704"
-"checksum syn 0.10.8 (registry+https://github.com/rust-lang/crates.io-index)" = "58fd09df59565db3399efbba34ba8a2fec1307511ebd245d0061ff9d42691673"
-"checksum unicode-xid 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)" = "8c1f860d7d29cf02cb2f3f359fd35991af3d30bac52c57d265a3c461074cb4dc"
 "checksum volatile-register 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a470889aa8f2d3ad893bd43cd90c824e63e8ac0ee5fe64c5d81a932d184fd549"

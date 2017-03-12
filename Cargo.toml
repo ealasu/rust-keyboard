@@ -2,7 +2,6 @@
 members = [
   "kbd",
   "crc8",
-  "crc8_macros",
   "wiring",
   "left-half/rust",
   "right-half/rust",

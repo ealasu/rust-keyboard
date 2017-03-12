@@ -1,4 +1,6 @@
 #include "kbd.h"
+#include <HID.h>
+
 
 static const uint8_t _hidReportDescriptor[] PROGMEM = {
 
@@ -71,5 +73,5 @@ typedef struct
 } KeyReport;
 
 extern "C" void send_key_report(KeyReport keys) {
-  HID().SendReport(2, keys, sizeof(KeyReport));
+  HID().SendReport(2, (void*)(&keys), sizeof(KeyReport));
 }

@@ -64,3 +64,11 @@ fn delay_with_nop() {
         nop();
     }
 }
+
+
+#[repr(C)]
+struct KeyReport {
+  modifiers: u8,
+  reserved: u8,
+  keys: [u8; 6],
+}

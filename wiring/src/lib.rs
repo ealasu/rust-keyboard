@@ -72,11 +72,15 @@ pub fn debug_serial_write(v: u8) -> u8 {
     unsafe { sys::debug_serial_write(v) }
 }
 
+pub fn send_key_report(keys: KeyReport) {
+    unsafe { sys::send_key_report(keys) }
+}
+
 #[repr(C)]
 pub struct KeyReport {
-  modifiers: u8,
-  reserved: u8,
-  keys: [u8; 6],
+  pub modifiers: u8,
+  pub reserved: u8,
+  pub keys: [u8; 6],
 }
 
 mod sys {

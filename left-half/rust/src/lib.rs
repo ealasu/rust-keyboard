@@ -30,31 +30,52 @@ pub extern fn kbd_run_loop() {
     wiring::digital_write(LED, High);
     delay_with_nop();
     wiring::digital_write(LED, Low);
+    delay_with_nop();
 
-    let mut msg_reader = kbd::msg_reader::MsgReader::new();
-    let left_matrix = kbd::matrix::Matrix {
-        row_pins: &[
-            // TODO
-        ],
-        col_pins: &[
-            // TODO
-        ],
-    };
-    left_matrix.init();
-    let mut decoder = kbd::decoder::Decoder::new();
+    //let mut msg_reader = kbd::msg_reader::MsgReader::new();
+    //let left_matrix = kbd::matrix::Matrix {
+        //row_pins: &[
+            //// TODO
+        //],
+        //col_pins: &[
+            //// TODO
+        //],
+    //};
+    //left_matrix.init();
+    //let mut decoder = kbd::decoder::Decoder::new();
 
     let mut right_keys = 0;
 
     loop {
-        while let Some(v) = wiring::serial_read() {
-            if let Some(scan) = msg_reader.read(v) {
-                right_keys = scan.0;
-            }
-        }
-        let left_keys = left_matrix.scan();
-        decoder.update(left_keys, right_keys, |state| {
-            // TODO send to usb
-            wiring::debug_serial_write('u' as u8);
+        //while let Some(v) = wiring::serial_read() {
+            //if let Some(scan) = msg_reader.read(v) {
+                //right_keys = scan.0;
+            //}
+        //}
+        //let left_keys = left_matrix.scan();
+        //decoder.update(left_keys, right_keys, |state| {
+            //// TODO send to usb
+            //wiring::debug_serial_write('u' as u8);
+        //});
+
+        wiring::digital_write(LED, High);
+        delay_with_nop();
+        wiring::digital_write(LED, Low);
+        delay_with_nop();
+        wiring::send_key_report(wiring::KeyReport {
+            reserved: 0,
+            modifiers: 0,
+            keys: [0,0,0,0,0,0],
+        });
+
+        wiring::digital_write(LED, High);
+        delay_with_nop();
+        wiring::digital_write(LED, Low);
+        delay_with_nop();
+        wiring::send_key_report(wiring::KeyReport {
+            reserved: 0,
+            modifiers: 0,
+            keys: [16,0,0,0,0,0],
         });
     }
 }

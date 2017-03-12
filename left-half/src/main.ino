@@ -37,12 +37,23 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
 
 
 void setup() {
-	static HIDSubDescriptor node(_hidReportDescriptor, sizeof(_hidReportDescriptor));
-	HID().AppendDescriptor(&node);
+  pinMode(26, OUTPUT);
+  digitalWrite(26, HIGH);
+  delay(100);
+  digitalWrite(26, LOW);
+  delay(100);
+
+  static HIDSubDescriptor node(_hidReportDescriptor, sizeof(_hidReportDescriptor));
+  HID().AppendDescriptor(&node);
 
   Serial.begin(9600);
   Serial1.begin(9600);
-  while (!Serial) ;
+  //while (!Serial) ;
+
+  digitalWrite(26, HIGH);
+  delay(100);
+  digitalWrite(26, LOW);
+  delay(100);
 }
 
 void loop() {

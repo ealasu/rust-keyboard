@@ -72,16 +72,14 @@ pub fn debug_serial_write(v: u8) -> u8 {
     unsafe { sys::debug_serial_write(v) }
 }
 
-pub fn send_key_report(keys: KeyReport) {
-    unsafe { sys::send_key_report(keys) }
+//pub fn send_key_report(keys: KeyReport) {
+    //unsafe { sys::send_key_report(keys) }
+//}
+
+pub fn hid_send_report(report_id: u8, data: &[u8]) {
+    unsafe { sys::hid_send_report(report_id, data.as_ptr(), data.len()) }
 }
 
-#[repr(C)]
-pub struct KeyReport {
-  pub modifiers: u8,
-  pub reserved: u8,
-  pub keys: [u8; 6],
-}
 
 mod sys {
     use super::*;
@@ -90,7 +88,8 @@ mod sys {
         pub fn delay(ms: u32);
         pub fn serial_write(b: u8) -> u8;
         pub fn debug_serial_write(b: u8) -> u8;
-        pub fn send_key_report(keys: KeyReport);
+        //pub fn send_key_report(keys: KeyReport);
+        pub fn hid_send_report(report_id: u8, data: *const u8, len: usize);
     }
 
     #[cfg(target_arch = "msp430")]

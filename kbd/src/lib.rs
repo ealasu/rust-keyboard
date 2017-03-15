@@ -8,3 +8,4 @@ pub mod matrix;
 pub mod decoder;
 pub mod keycode;
 pub mod keycodes;
+pub mod layout;

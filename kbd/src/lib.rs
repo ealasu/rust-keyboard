@@ -1,3 +1,4 @@
+#![feature(trace_macros)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate crc8;

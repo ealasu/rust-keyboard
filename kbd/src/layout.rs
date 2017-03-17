@@ -22,13 +22,13 @@ trace_macros!(true);
 //}
 
 macro_rules! keyboard_layout_key {
-  (()) => {
+  ([]) => {
     [None, None, None, None]
   };
-  (($k1:path)) => {
+  ([$k1:path]) => {
     [Some($k1), None, None, None]
   };
-  (($k1:path | $k2:path)) => {
+  ([$k1:path | $k2:path]) => {
     [Some($k1), Some($k2), None, None]
   };
 }
@@ -62,8 +62,8 @@ pub type Layout = [[[Option<KeyCode>; 4]; 10]; 2];
 
 
 const QWERTY_LAYOUT: Layout = keyboard_layout![
-  [(Q), (W | LEFT_SHIFT), (O)],
-  [(W), (), (O), ()],
+  [[Q], [W | LEFT_SHIFT], [O]],
+  [[W], [], [O], []],
   //[[Q], [W], [O]],
   //[[W], [Q]],
   //[Q, W, O],

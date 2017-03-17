@@ -20,13 +20,23 @@ macro_rules! keyboard_layout_key {
 }
 
 macro_rules! keyboard_layout {
-  ( $( $key:tt , )+ ) => {
-    [$( keyboard_layout_key!($key), )+]
+  ( $( [ $( [$($key:path),*] ),+ ], )+ ) => {
+    [
+      $( [
+        $( keyboard_layout_key!( $( $key ),* )  ),+
+      ] )+
+    ]
   };
 }
 
-const LAYOUT: [[Option<KeyCode>; 4]; 3] = keyboard_layout![
-  [], [A], [LEFT_SHIFT, B],
+pub type Layout = [[[Option<KeyCode>; 4]; 10]; 2];
+
+const QWERTY_LAYOUT: Layout = keyboard_layout![
+  [[Q], [W], []],
+  [[W], [Q]],
+  //[[ ], [ ]], 
+  //[[Q], [W], [E], [R], [T], [Y], [U], [I], [O], [P]], 
+  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]], 
 ];
 
 #[cfg(test)]
@@ -35,6 +45,6 @@ mod tests {
 
   #[test]
   fn test() {
-    println!("{:?}", LAYOUT);
+    println!("{:?}", QWERTY_LAYOUT);
   }
 }

@@ -1,10 +1,12 @@
 #![no_std]
 
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum PinMode {
     Input = 0,
     Output = 1,
 }
 
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum PinState {
     Low = 0,
     High = 1,
@@ -15,7 +17,7 @@ pub fn pin_mode(pin: usize, mode: PinMode) {
     unsafe { sys::pinMode(pin as u8, mode as u8) };
 }
 
-#[cfg(target_arch = "arm")]
+#[cfg(not(target_arch = "msp430"))]
 pub fn pin_mode(pin: usize, mode: PinMode) {
     unsafe { sys::pinMode(pin as u32, mode as u32) };
 }
@@ -26,7 +28,7 @@ pub fn digital_write(pin: usize, state: PinState) {
     unsafe { sys::digitalWrite(pin as u8, state as u8) };
 }
 
-#[cfg(target_arch = "arm")]
+#[cfg(not(target_arch = "msp430"))]
 pub fn digital_write(pin: usize, state: PinState) {
     unsafe { sys::digitalWrite(pin as u32, state as u32) };
 }
@@ -41,7 +43,7 @@ pub fn digital_read(pin: usize) -> PinState {
     }
 }
 
-#[cfg(target_arch = "arm")]
+#[cfg(not(target_arch = "msp430"))]
 pub fn digital_read(pin: usize) -> PinState {
     let v = unsafe { sys::digitalRead(pin as u32) };
     match v {
@@ -82,8 +84,6 @@ pub fn hid_send_report(report_id: u8, data: &[u8]) {
 
 
 mod sys {
-    use super::*;
-
     extern {
         pub fn delay(ms: u32);
         pub fn serial_write(b: u8) -> u8;
@@ -93,18 +93,32 @@ mod sys {
     }
 
     #[cfg(target_arch = "msp430")]
-    extern {
-        pub fn digitalWrite(pin: u8, state: u8);
-        pub fn digitalRead(pin: u8) -> u16;
-        pub fn pinMode(pin: u8, mode: u8);
-        pub fn serial_read() -> i16;
+    pub mod platform {
+        extern {
+            pub fn digitalWrite(pin: u8, state: u8);
+            pub fn digitalRead(pin: u8) -> u16;
+            pub fn pinMode(pin: u8, mode: u8);
+            pub fn serial_read() -> i16;
+        }
     }
 
     #[cfg(target_arch = "arm")]
-    extern {
-        pub fn digitalWrite(pin: u32, state: u32);
-        pub fn digitalRead(pin: u32) -> u32;
-        pub fn pinMode(pin: u32, mode: u32);
-        pub fn serial_read() -> i32;
+    pub mod platform {
+        extern {
+            pub fn digitalWrite(pin: u32, state: u32);
+            pub fn digitalRead(pin: u32) -> u32;
+            pub fn pinMode(pin: u32, mode: u32);
+            pub fn serial_read() -> i32;
+        }
     }
+
+    #[cfg(not(any(target_arch = "arm", target_arch = "msp430")))]
+    pub mod platform {
+        pub fn serial_read() -> i32 { 0 }
+        pub fn digitalWrite(pin: u32, state: u32) {}
+        pub fn digitalRead(pin: u32) -> u32 { 0 }
+        pub fn pinMode(pin: u32, mode: u32) {}
+    }
+
+    pub use self::platform::*;
 }

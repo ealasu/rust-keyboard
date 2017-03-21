@@ -32,6 +32,7 @@ name = "kbd"
 version = "0.1.0"
 dependencies = [
  "crc8 0.1.0",
+ "wiring 0.1.0",
 ]
 
 [[package]]

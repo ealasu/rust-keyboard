@@ -4,6 +4,7 @@ version = "0.1.0"
 
 [dependencies]
 crc8 = { path = "../crc8" }
+wiring = { path = "../wiring" }
 
 [features]
 default = ['std']

@@ -46,7 +46,7 @@ pub type Layout = [[[Option<KeyCode>; 4]; 10]; 2];
 const QWERTY_LAYOUT: Layout = keyboard_layout![
   [[Q], [W], [E], [R], [T], [Y], [U], [I], [O], [P]], 
   [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]], 
-  [[Q | LEFT_SHIFT]],
+  //[[Q | LEFT_SHIFT]],
 ];
 
 #[cfg(test)]

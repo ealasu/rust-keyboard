@@ -10,8 +10,10 @@ pub enum PinState {
     High = 1,
 }
 
+pub type PinId = u8;
+
 pub trait Gpio {
-    fn pin_mode(pin: u8, mode: PinMode);
-    fn digital_write(pin: u8, state: PinState);
-    fn digital_read(pin: u8) -> PinState;
+    fn pin_mode(pin: PinId, mode: PinMode);
+    fn digital_write(pin: PinId, state: PinState);
+    fn digital_read(pin: PinId) -> PinState;
 }

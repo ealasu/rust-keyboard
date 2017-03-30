@@ -1,4 +1,4 @@
-use gpio::{Gpio, PinMode, PinState};
+use gpio::{Gpio, PinId, PinMode, PinState};
 
 pub struct GpioImpl;
 

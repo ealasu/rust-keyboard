@@ -3,3 +3,7 @@ name = "wiring"
 version = "0.1.0"
 
 [dependencies]
+futures = {version="*", default-features=false}
+
+[features]
+std = ["futures/use_std"]

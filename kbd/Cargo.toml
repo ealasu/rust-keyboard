@@ -7,5 +7,5 @@ crc8 = { path = "../crc8" }
 wiring = { path = "../wiring" }
 
 [features]
-default = ['std']
-std = []
+#default = ["std"]
+std = ["wiring/std"]

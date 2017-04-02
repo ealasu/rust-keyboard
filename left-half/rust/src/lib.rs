@@ -20,8 +20,9 @@ mod lang_items;
 use core::slice;
 use core::mem;
 use cortex_m::asm::nop;
-use wiring::PinMode::*;
-use wiring::PinState::*;
+use wiring::gpio_impl::{GpioImpl};
+use wiring::gpio::PinMode::*;
+use wiring::gpio::PinState::*;
 use kbd::decoder::KeyReport;
 
 const LED: usize = 26;
@@ -29,10 +30,11 @@ const LED: usize = 26;
 #[no_mangle]
 pub extern fn kbd_run_loop() {
     // flash the LED once
-    wiring::pin_mode(LED, Output);
-    wiring::digital_write(LED, High);
+    let gpio = GpioImpl;
+    gpio.pin_mode(LED, Output);
+    gpio.digital_write(LED, High);
     delay_with_nop();
-    wiring::digital_write(LED, Low);
+    gpio.digital_write(LED, Low);
     delay_with_nop();
 
     let mut msg_reader = kbd::msg_reader::MsgReader::new();

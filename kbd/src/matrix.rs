@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use core::marker::PhantomData;
 use wiring::gpio::{Gpio, PinId, PinMode, PinState};
 use wiring::gpio_impl::GpioImpl;
 

@@ -1,11 +1,11 @@
 #![no_std]
 
+extern crate futures;
+
 pub mod gpio;
 pub mod gpio_impl;
 pub mod gpio_mock;
 pub mod serial;
-pub mod serial_impl;
-pub mod serial_mock;
 
 
 pub fn delay(ms: u32) {

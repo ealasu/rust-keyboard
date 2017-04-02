@@ -1,12 +1,14 @@
-use serial::Serial;
+use serial::{ReadU8, WriteU8};
 
 pub struct SerialMock;
 
-impl Serial for SerialMock {
-    fn read() -> Option<u8> {
+impl ReadU8 for SerialMock {
+    fn read(&mut self) -> Option<u8> {
         None
     }
+}
 
-    fn write(v: u8) {
+impl WriteU8 for SerialMock {
+    fn write(&mut self, v: u8) {
     }
 }

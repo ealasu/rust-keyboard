@@ -55,7 +55,12 @@ mod tests {
 
   #[test]
   fn test() {
-
-    println!("{:?}", QWERTY_LAYOUT);
+    let layout = keyboard_layout![
+      [[Q], [ ], [E | LEFT_SHIFT]],
+    ];
+    let expected = [
+      [[Some(Q), None, None, None], [None, None, None, None], [Some(E), Some(LEFT_SHIFT), None, None]]
+    ];
+    assert_eq!(&layout[..], &expected[..]);
   }
 }

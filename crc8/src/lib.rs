@@ -16,7 +16,6 @@ impl Crc8 {
         Crc8 { table: table }
     }
 
-
     #[inline]
     pub fn calc_byte(&self, crc: u8, v: u8) -> u8 {
         self.table[(crc ^ v) as usize]

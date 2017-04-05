@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-extern crate futures;
+#[macro_use] extern crate futures;
 extern crate crc8;
 extern crate wiring;
 

@@ -1,31 +1,85 @@
 use futures::{Poll, Async, AsyncSink, StartSend};
 use futures::stream::Stream;
+use crc8::{self, Crc8};
 
 const SOF: u8 = 0b01111110;
 const ESC: u8 = 0b01111101;
 const ESC_SOF: u8 = 0b01011110;
 const ESC_ESC: u8 = 0b01011101;
+static CRC: &Crc8 = &crc8::predefined::MAXIM;
 
-pub struct FrameStream<'a, Inner: Stream> {
-    inner: Inner,
-    buf: &'a mut [u8],
+macro_rules! try_poll {
+    ($e:expr) => (match $e {
+        Ok(::futures::Async::Ready(Some(t))) => t,
+        Ok(::futures::Async::Ready(None)) => return Ok(::futures::Async::Ready(None)),
+        Ok(::futures::Async::NotReady) => return Ok(::futures::Async::NotReady),
+        Err(e) => return Err(From::from(e)),
+    })
 }
 
-impl<'a, Inner: Stream> FrameStream<'a, Inner> {
-    pub fn new(inner: Inner, buf: &'a mut [u8]) -> Self {
+enum State {
+    Sof, /// Start-Of-Frame
+    AfterSof,
+    Payload(usize),
+}
+
+pub struct FrameStream<'a, Inner, F> {
+    inner: Inner,
+    buf: &'a mut [u8],
+    decoder: F,
+    state: State,
+}
+
+impl<'a, Inner: Stream, T, F: FnMut(&[u8]) -> T> FrameStream<'a, Inner, F> {
+    pub fn new(inner: Inner, buf: &'a mut [u8], decoder: F) -> Self {
         FrameStream {
             inner: inner,
             buf: buf,
+            decoder: decoder,
+            state: State::Sof,
         }
     }
 }
 
-impl<'a, Inner: Stream> Stream for FrameStream<'a, Inner> {
-    type Item = &'a [u8];
+impl<'a, Inner: Stream<Item=u8>, T, F: FnMut(&[u8]) -> T> Stream for FrameStream<'a, Inner, F> {
+    type Item = T;
     type Error = Inner::Error;
 
     fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error> {
-        unimplemented!()
+        loop {
+            match self.state {
+                State::Sof => {
+                    loop {
+                        if try_poll!(self.inner.poll()) == SOF {
+                            self.state = State::AfterSof;
+                            break;
+                        }
+                    }
+                }
+                State::AfterSof => {
+                    loop {
+                        let v = try_poll!(self.inner.poll());
+                        if v != SOF {
+                            self.buf[0] = v;
+                            self.state = State::Payload(1);
+                            break;
+                        }
+                    }
+                }
+                State::Payload(len) => {
+                    let v = try_poll!(self.inner.poll());
+                    self.buf[len] = v;
+                    let len = len + 1;
+                    if len == self.buf.len() {
+                        self.state = State::Sof;
+                        let res = (self.decoder)(self.buf);
+                        return Ok(Async::Ready(Some(res)));
+                    } else {
+                        self.state = State::Payload(len);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -92,13 +146,18 @@ mod tests {
     }
 
     fn run_test(data: &[u8], expected: &[&[u8]]) {
-        let inner = stream::iter::<_, _, ()>(data.iter().map(|it| Ok(it)));
+        let inner = stream::iter::<_, _, ()>(data.iter().map(|it| Ok(*it)));
         let mut buf = [0u8; 3];
-        let mut unit = FrameStream::new(inner, &mut buf);
+        let mut expected_iter = expected.iter();
+        let mut unit = FrameStream::new(inner, &mut buf, |buf| {
+            let expected = expected_iter.next().unwrap();
+            assert_eq!(&buf, expected);
+            3
+        });
         for &expected_frame in expected.iter() {
             let res = unit.poll().unwrap();
             if let Async::Ready(Some(actual_frame)) = res {
-                assert_eq!(actual_frame, expected_frame);
+                assert_eq!(actual_frame, 3);
             } else {
                 panic!("expected {:?}, got {:?}", expected_frame, res);
             }

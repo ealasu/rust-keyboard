@@ -1,4 +1,4 @@
-use futures::{Poll, Async, AsyncSink, StartSend};
+use futures::{Poll, Async};
 use futures::stream::Stream;
 use crc8::{self, Crc8};
 
@@ -20,7 +20,10 @@ macro_rules! try_poll {
 enum State {
     Sof, /// Start-Of-Frame
     AfterSof,
-    Payload(usize),
+    Payload {
+        len: usize,
+        esc: bool
+    },
 }
 
 pub struct FrameStream<'a, Inner, F> {
@@ -60,22 +63,37 @@ impl<'a, Inner: Stream<Item=u8>, T, F: FnMut(&[u8]) -> T> Stream for FrameStream
                     loop {
                         let v = try_poll!(self.inner.poll());
                         if v != SOF {
-                            self.buf[0] = v;
-                            self.state = State::Payload(1);
+                            if v == ESC {
+                                self.state = State::Payload { len: 0, esc: true };
+                            } else {
+                                self.buf[0] = v;
+                                self.state = State::Payload { len: 1, esc: false };
+                            }
                             break;
                         }
                     }
                 }
-                State::Payload(len) => {
+                State::Payload { len, esc } => {
                     let v = try_poll!(self.inner.poll());
-                    self.buf[len] = v;
-                    let len = len + 1;
-                    if len == self.buf.len() {
-                        self.state = State::Sof;
-                        let res = (self.decoder)(self.buf);
-                        return Ok(Async::Ready(Some(res)));
+                    if v == ESC {
+                        self.state = State::Payload { len: len, esc: true };
                     } else {
-                        self.state = State::Payload(len);
+                        let v = if esc {
+                            match v {
+                                ESC_SOF => SOF,
+                                ESC_ESC => ESC,
+                                _ => v
+                            }
+                        } else { v };
+                        self.buf[len] = v;
+                        let len = len + 1;
+                        if len == self.buf.len() {
+                            self.state = State::Sof;
+                            let res = (self.decoder)(self.buf);
+                            return Ok(Async::Ready(Some(res)));
+                        } else {
+                            self.state = State::Payload { len: len, esc: false };
+                        }
                     }
                 }
             }
@@ -142,6 +160,24 @@ mod tests {
         run_test(
             &[SOF,1,ESC,ESC_ESC,2,66],
             &[&[1,ESC,2]]
+        );
+    }
+
+    #[test]
+    fn esc_in_stream() {
+        // not supposed to happen, but should be handled
+        run_test(
+            &[SOF,1,ESC,2,3],
+            &[&[1,2,3]]
+        );
+    }
+
+    #[test]
+    fn esc_esc_in_stream() {
+        // not supposed to happen, but should be handled
+        run_test(
+            &[SOF,1,ESC,ESC,2,3],
+            &[&[1,2,3]]
         );
     }
 

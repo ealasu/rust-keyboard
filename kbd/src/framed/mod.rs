@@ -2,6 +2,7 @@ use crc8::{self, Crc8};
 
 mod frame_stream;
 mod frame_sink;
+mod sync_sink;
 
 const SOF: u8 = 0b01111110;
 const ESC: u8 = 0b01111101;

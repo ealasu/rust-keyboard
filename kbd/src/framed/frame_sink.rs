@@ -51,24 +51,26 @@ mod tests {
     #[test]
     fn test() {
         run_test(
-            [1,2].into_iter(),
+            &[&[1,2]],
             &[3,4]
         );
     }
 
-    fn run_test<Item, I>(items: I, expected_data: &[u8])
-    where Item: Debug + PartialEq, I: IntoIterator<Item=Item> {
-        let mut expected = expected_data.iter();
-        let sink = SyncSink::new(|item| {
-            assert_eq!(item, *expected.next().unwrap());
-        });
-        let mut buf = [0u8; 4];
-        let mut unit = FrameSink::new(sink, |item, buf| {
-            buf.copy_from_slice(item);
-        }, &mut buf);
-        for item in items.into_iter() {
-            assert_eq!(unit.start_send(item).unwrap(), AsyncSink::Ready);
-            //unit.poll_complete().unwrap();
+    fn run_test(frames: &[&[u8]], expected_bytes: &[u8]) {
+        let mut expected_bytes = expected_bytes.iter();
+        {
+            let sink = SyncSink::new(|actual_byte| {
+                assert_eq!(actual_byte, *expected_bytes.next().unwrap());
+            });
+            let mut buf = [0u8; 4];
+            let mut unit = FrameSink::new(sink, |item, buf| {
+                buf.copy_from_slice(item);
+            }, &mut buf);
+            for frame in frames.into_iter() {
+                assert_eq!(unit.start_send(frame).unwrap(), AsyncSink::Ready);
+                //unit.poll_complete().unwrap();
+            }
         }
+        assert_eq!(expected_bytes.next(), None);
     }
 }

@@ -12,4 +12,4 @@ pub mod decoder;
 pub mod keycode;
 pub mod keycodes;
 pub mod layout;
-pub mod frame_stream;
+pub mod framed;

@@ -1,12 +1,6 @@
 use futures::{Poll, Async};
 use futures::stream::Stream;
-use crc8::{self, Crc8};
-
-const SOF: u8 = 0b01111110;
-const ESC: u8 = 0b01111101;
-const ESC_SOF: u8 = 0b01011110;
-const ESC_ESC: u8 = 0b01011101;
-static CRC: &Crc8 = &crc8::predefined::MAXIM;
+use super::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
 
 macro_rules! try_poll {
     ($e:expr) => (match $e {
@@ -34,9 +28,11 @@ pub struct FrameStream<'a, Inner, F> {
     state: State,
 }
 
-impl<'a, Inner: Stream, T, F: FnMut(&[u8]) -> T> FrameStream<'a, Inner, F> {
+impl<'a, Inner, Item, F> FrameStream<'a, Inner, F>
+where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
+{
     pub fn new(inner: Inner, buf: &'a mut [u8], decoder: F) -> Self {
-        FrameStream {
+        Self {
             inner: inner,
             buf: buf,
             decoder: decoder,
@@ -45,8 +41,10 @@ impl<'a, Inner: Stream, T, F: FnMut(&[u8]) -> T> FrameStream<'a, Inner, F> {
     }
 }
 
-impl<'a, Inner: Stream<Item=u8>, T, F: FnMut(&[u8]) -> T> Stream for FrameStream<'a, Inner, F> {
-    type Item = T;
+impl<'a, Inner, Item, F> Stream for FrameStream<'a, Inner, F>
+where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
+{
+    type Item = Item;
     type Error = Inner::Error;
 
     fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error> {

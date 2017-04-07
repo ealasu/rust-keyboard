@@ -17,6 +17,7 @@ macro_rules! try_poll {
     })
 }
 
+#[derive(Debug)]
 enum State {
     Sof, /// Start-Of-Frame
     AfterSof,
@@ -89,8 +90,15 @@ impl<'a, Inner: Stream<Item=u8>, T, F: FnMut(&[u8]) -> T> Stream for FrameStream
                         let len = len + 1;
                         if len == self.buf.len() {
                             self.state = State::Sof;
-                            let res = (self.decoder)(self.buf);
-                            return Ok(Async::Ready(Some(res)));
+                            let payload = &self.buf[..self.buf.len() - 1];
+                            let expected_crc = self.buf[self.buf.len() - 1];
+                            let actual_crc = CRC.calc_buf(payload);
+                            if expected_crc == actual_crc {
+                                let res = (self.decoder)(payload);
+                                return Ok(Async::Ready(Some(res)));
+                            } else {
+                                panic!("crc: {}, expected: {}", actual_crc, expected_crc);
+                            }
                         } else {
                             self.state = State::Payload { len: len, esc: false };
                         }
@@ -118,7 +126,7 @@ mod tests {
     #[test]
     fn one_frame() {
         run_test(
-            &[SOF,1,2,3,66],
+            &[SOF,1,2,3,216],
             &[&[1,2,3]]
         );
     }
@@ -126,7 +134,7 @@ mod tests {
     #[test]
     fn two_frames() {
         run_test(
-            &[SOF,1,2,3,66,SOF,4,5,6,77],
+            &[SOF,1,2,3,216,SOF,4,5,6,188],
             &[&[1,2,3], &[4,5,6]]
         );
     }
@@ -134,7 +142,7 @@ mod tests {
     #[test]
     fn junk_between_frames() {
         run_test(
-            &[9,8,SOF,1,2,3,66,7,6,SOF,4,5,6,77,5,4],
+            &[9,8,SOF,1,2,3,216,7,6,SOF,4,5,6,188,5,4],
             &[&[1,2,3], &[4,5,6]]
         );
     }
@@ -142,7 +150,7 @@ mod tests {
     #[test]
     fn multiple_sofs() {
         run_test(
-            &[SOF,SOF,1,2,3,66,SOF,SOF,SOF,4,5,6,77],
+            &[SOF,SOF,1,2,3,216,SOF,SOF,SOF,4,5,6,188],
             &[&[1,2,3], &[4,5,6]]
         );
     }
@@ -150,7 +158,7 @@ mod tests {
     #[test]
     fn sof_in_payload() {
         run_test(
-            &[SOF,1,ESC,ESC_SOF,2,66],
+            &[SOF,1,ESC,ESC_SOF,2,ESC,ESC_ESC], // the crc happens to equal ESC
             &[&[1,SOF,2]]
         );
     }
@@ -158,8 +166,16 @@ mod tests {
     #[test]
     fn esc_in_payload() {
         run_test(
-            &[SOF,1,ESC,ESC_ESC,2,66],
+            &[SOF,1,ESC,ESC_ESC,2,40],
             &[&[1,ESC,2]]
+        );
+    }
+
+    #[test]
+    fn zero_payload() {
+        run_test(
+            &[SOF,0,0,0,0],
+            &[&[0,0,0]]
         );
     }
 
@@ -167,7 +183,7 @@ mod tests {
     fn esc_in_stream() {
         // not supposed to happen, but should be handled
         run_test(
-            &[SOF,1,ESC,2,3],
+            &[SOF,1,ESC,2,3,216],
             &[&[1,2,3]]
         );
     }
@@ -176,19 +192,19 @@ mod tests {
     fn esc_esc_in_stream() {
         // not supposed to happen, but should be handled
         run_test(
-            &[SOF,1,ESC,ESC,2,3],
+            &[SOF,1,ESC,ESC,2,3,216],
             &[&[1,2,3]]
         );
     }
 
     fn run_test(data: &[u8], expected: &[&[u8]]) {
         let inner = stream::iter::<_, _, ()>(data.iter().map(|it| Ok(*it)));
-        let mut buf = [0u8; 3];
+        let mut buf = [0u8; 4];
         let mut expected_iter = expected.iter();
         let mut unit = FrameStream::new(inner, &mut buf, |buf| {
             let expected = expected_iter.next().unwrap();
             assert_eq!(&buf, expected);
-            3
+            buf.len()
         });
         for &expected_frame in expected.iter() {
             let res = unit.poll().unwrap();

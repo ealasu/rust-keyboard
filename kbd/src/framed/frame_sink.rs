@@ -49,10 +49,10 @@ mod tests {
     use super::super::sync_sink::SyncSink;
 
     #[test]
-    fn test() {
+    fn one_frame() {
         run_test(
-            &[&[1,2]],
-            &[3,4]
+            &[&[1,2,3]],
+            &[SOF,3,4]
         );
     }
 

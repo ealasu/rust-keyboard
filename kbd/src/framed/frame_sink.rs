@@ -64,7 +64,7 @@ mod tests {
         });
         let mut buf = [0u8; 4];
         let mut unit = FrameSink::new(sink, |item, buf| {
-            // TODO: copy
+            buf.copy_from_slice(item);
         }, &mut buf);
         for item in items.into_iter() {
             assert_eq!(unit.start_send(item).unwrap(), AsyncSink::Ready);

@@ -82,13 +82,7 @@ mod tests {
     use futures::Async;
     use super::super::sync_sink::SyncSink;
 
-    #[test]
-    fn one_frame() {
-        run_test(
-            &[&[1,2,3]],
-            &[SOF,1,2,3,216]
-        );
-    }
+    include!("common_tests.rs");
 
     fn run_test(frames: &[&[u8]], expected_bytes: &[u8]) {
         let mut expected_bytes = expected_bytes.iter();

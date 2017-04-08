@@ -113,67 +113,21 @@ mod tests {
     use futures::stream;
     use futures::Async;
 
-    #[test]
-    fn empty() {
-        run_test(
-            &[],
-            &[]
-        );
-    }
-
-    #[test]
-    fn one_frame() {
-        run_test(
-            &[SOF,1,2,3,216],
-            &[&[1,2,3]]
-        );
-    }
-
-    #[test]
-    fn two_frames() {
-        run_test(
-            &[SOF,1,2,3,216,SOF,4,5,6,188],
-            &[&[1,2,3], &[4,5,6]]
-        );
-    }
+    include!("common_tests.rs");
 
     #[test]
     fn junk_between_frames() {
         run_test(
-            &[9,8,SOF,1,2,3,216,7,6,SOF,4,5,6,188,5,4],
-            &[&[1,2,3], &[4,5,6]]
+            &[&[1,2,3], &[4,5,6]],
+            &[9,8,SOF,1,2,3,216,7,6,SOF,4,5,6,188,5,4]
         );
     }
 
     #[test]
     fn multiple_sofs() {
         run_test(
-            &[SOF,SOF,1,2,3,216,SOF,SOF,SOF,4,5,6,188],
-            &[&[1,2,3], &[4,5,6]]
-        );
-    }
-
-    #[test]
-    fn sof_in_payload() {
-        run_test(
-            &[SOF,1,ESC,ESC_SOF,2,ESC,ESC_ESC], // the crc happens to equal ESC
-            &[&[1,SOF,2]]
-        );
-    }
-
-    #[test]
-    fn esc_in_payload() {
-        run_test(
-            &[SOF,1,ESC,ESC_ESC,2,40],
-            &[&[1,ESC,2]]
-        );
-    }
-
-    #[test]
-    fn zero_payload() {
-        run_test(
-            &[SOF,0,0,0,0],
-            &[&[0,0,0]]
+            &[&[1,2,3], &[4,5,6]],
+            &[SOF,SOF,1,2,3,216,SOF,SOF,SOF,4,5,6,188]
         );
     }
 
@@ -181,8 +135,8 @@ mod tests {
     fn esc_in_stream() {
         // not supposed to happen, but should be handled
         run_test(
-            &[SOF,1,ESC,2,3,216],
-            &[&[1,2,3]]
+            &[&[1,2,3]],
+            &[SOF,1,ESC,2,3,216]
         );
     }
 
@@ -190,12 +144,12 @@ mod tests {
     fn esc_esc_in_stream() {
         // not supposed to happen, but should be handled
         run_test(
-            &[SOF,1,ESC,ESC,2,3,216],
-            &[&[1,2,3]]
+            &[&[1,2,3]],
+            &[SOF,1,ESC,ESC,2,3,216]
         );
     }
 
-    fn run_test(data: &[u8], expected: &[&[u8]]) {
+    fn run_test(expected: &[&[u8]], data: &[u8]) {
         let inner = stream::iter::<_, _, ()>(data.iter().map(|it| Ok(*it)));
         let mut buf = [0u8; 4];
         let mut expected_iter = expected.iter();

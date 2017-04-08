@@ -22,7 +22,7 @@ use futures::sink::Sink;
 pub extern fn kbd_run_loop() {
     //wiring::pin_mode(LED, wiring::PinMode::Output);
 
-    let matrix = kbd::matrix::Matrix::<GpioImpl>::new(
+    let mut matrix = kbd::matrix::Matrix::new(GpioImpl,
         &[ // rows
             // TODO
         ],

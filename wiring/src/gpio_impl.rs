@@ -4,16 +4,19 @@ pub struct GpioImpl;
 
 impl Gpio for GpioImpl {
     #[cfg(target_arch = "arm")]
+    #[inline]
     fn pin_mode(&mut self, pin: PinId, mode: PinMode) {
         unsafe { sys::pinMode(pin as u32, mode as u32) };
     }
 
     #[cfg(target_arch = "arm")]
+    #[inline]
     fn digital_write(&mut self, pin: PinId, state: PinState) {
         unsafe { sys::digitalWrite(pin as u32, state as u32) };
     }
 
     #[cfg(target_arch = "arm")]
+    #[inline]
     fn digital_read(&self, pin: PinId) -> PinState {
         let v = unsafe { sys::digitalRead(pin as u32) };
         match v {
@@ -25,16 +28,19 @@ impl Gpio for GpioImpl {
 
 
     #[cfg(target_arch = "msp430")]
+    #[inline]
     fn pin_mode(&mut self, pin: PinId, mode: PinMode) {
         unsafe { sys::pinMode(pin as u8, mode as u8) };
     }
 
     #[cfg(target_arch = "msp430")]
+    #[inline]
     fn digital_write(&mut self, pin: PinId, state: PinState) {
         unsafe { sys::digitalWrite(pin as u8, state as u8) };
     }
 
     #[cfg(target_arch = "msp430")]
+    #[inline]
     fn digital_read(&self, pin: PinId) -> PinState {
         let v = unsafe { sys::digitalRead(pin as u8) };
         match v {

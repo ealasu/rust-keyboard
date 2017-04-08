@@ -3,32 +3,45 @@
 
 extern crate wiring;
 extern crate kbd;
+extern crate framed;
+extern crate futures;
 
 mod lang_items;
 
+use wiring::gpio_impl::GpioImpl;
+use wiring::serial::Serial;
+use framed::sink::FrameSink;
+use kbd::msg::Msg;
+use futures::{Async, AsyncSink};
+use futures::sink::Sink;
+
 //const LED: usize = 2;
+
 
 #[no_mangle]
 pub extern fn kbd_run_loop() {
     //wiring::pin_mode(LED, wiring::PinMode::Output);
 
-    let matrix = kbd::matrix::Matrix {
-        row_pins: &[
+    let matrix = kbd::matrix::Matrix::<GpioImpl>::new(
+        &[ // rows
             // TODO
         ],
-        col_pins: &[
+        &[ // cols
             // TODO
-        ],
-    };
-    matrix.init();
+        ]
+    );
+
+    let serial = Serial;
+    let mut buf = [0u8; 5];
+    let mut sink = FrameSink::<_,Msg,_>::new(serial, |item, buf| {
+        buf.copy_from_slice(&item.write());
+    }, &mut buf);
 
     loop {
         let keys = matrix.scan();
-        let msg = kbd::msg::Msg(keys);
-        let buf = msg.write();
-        for &v in buf.iter() {
-            wiring::serial_write(v);
-        }
+        let msg = Msg(keys);
+        while let AsyncSink::NotReady(_) = sink.start_send(msg).unwrap() {}
+        while let Async::NotReady = sink.poll_complete().unwrap() {}
 
         //wiring::digital_write(LED, wiring::PinState::High);
         //wiring::delay(300);

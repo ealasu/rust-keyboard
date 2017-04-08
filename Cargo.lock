@@ -67,6 +67,8 @@ dependencies = [
 name = "kbd_right_half"
 version = "0.1.0"
 dependencies = [
+ "framed 0.1.0",
+ "futures 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "kbd 0.1.0",
  "wiring 0.1.0",
 ]

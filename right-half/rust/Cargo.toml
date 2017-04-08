@@ -8,3 +8,5 @@ crate-type = ["staticlib"]
 [dependencies]
 wiring = { path = "../../wiring" }
 kbd = { path = "../../kbd" }
+framed = { path = "../../framed" }
+futures = {version="*", default-features=false}

@@ -17,7 +17,7 @@ extern crate framed;
 
 #[macro_use]
 mod macros;
-mod lang_items;
+pub mod lang_items;
 
 use core::slice;
 use core::mem;
@@ -66,6 +66,11 @@ pub extern fn kbd_run_loop() {
     loop {
         while let Async::Ready(v) = stream.poll().unwrap() {
             right_keys = v.unwrap().0;
+
+            gpio.digital_write(LED, High);
+            delay_with_nop();
+            gpio.digital_write(LED, Low);
+            delay_with_nop();
         }
         let left_keys = left_matrix.scan();
         decoder.update(left_keys, right_keys, |report| {
@@ -77,22 +82,22 @@ pub extern fn kbd_run_loop() {
             //wiring::debug_serial_write('u' as u8);
         });
 
-        gpio.digital_write(LED, High);
-        delay_with_nop();
-        gpio.digital_write(LED, Low);
-        delay_with_nop();
-        wiring::hid_send_report(4, &[0,0,0,0,0,0,0,0]);
+        //gpio.digital_write(LED, High);
+        //delay_with_nop();
+        //gpio.digital_write(LED, Low);
+        //delay_with_nop();
+        //wiring::hid_send_report(4, &[0,0,0,0,0,0,0,0]);
         //wiring::send_key_report(wiring::KeyReport {
             //reserved: 0,
             //modifiers: 0,
             //keys: [0,0,0,0,0,0],
         //});
 
-        gpio.digital_write(LED, High);
-        delay_with_nop();
-        gpio.digital_write(LED, Low);
-        delay_with_nop();
-        wiring::hid_send_report(4, &[0,0,0xE9,0,0,0,0,0]);
+        //gpio.digital_write(LED, High);
+        //delay_with_nop();
+        //gpio.digital_write(LED, Low);
+        //delay_with_nop();
+        //wiring::hid_send_report(4, &[0,0,0xE9,0,0,0,0,0]);
         //wiring::send_key_report(wiring::KeyReport {
             //reserved: 0,
             //modifiers: 0,

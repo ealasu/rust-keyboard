@@ -6,7 +6,7 @@ extern crate kbd;
 extern crate framed;
 extern crate futures;
 
-mod lang_items;
+pub mod lang_items;
 
 use wiring::gpio_impl::GpioImpl;
 use wiring::serial::Serial;

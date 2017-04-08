@@ -1,7 +1,8 @@
 use core::fmt::Arguments;
 
 #[lang = "panic_fmt"]
-unsafe extern "C" fn panic_fmt(_args: Arguments,
+#[no_mangle]
+pub unsafe extern "C" fn panic_fmt(_args: Arguments,
                                _file: &'static str,
                                _line: u32)
                                -> ! {

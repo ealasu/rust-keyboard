@@ -12,6 +12,8 @@ extern crate compiler_builtins;
 extern crate cortex_m;
 extern crate wiring;
 extern crate kbd;
+extern crate futures;
+extern crate framed;
 
 #[macro_use]
 mod macros;
@@ -21,41 +23,49 @@ use core::slice;
 use core::mem;
 use cortex_m::asm::nop;
 use wiring::gpio_impl::{GpioImpl};
+use wiring::gpio::{Gpio, PinId};
 use wiring::gpio::PinMode::*;
 use wiring::gpio::PinState::*;
+use wiring::serial::Serial;
+use kbd::msg::Msg;
 use kbd::decoder::KeyReport;
+use framed::stream::FrameStream;
+use futures::Async;
+use futures::stream::Stream;
 
-const LED: usize = 26;
+const LED: PinId = 26;
 
 #[no_mangle]
 pub extern fn kbd_run_loop() {
     // flash the LED once
-    let gpio = GpioImpl;
+    let mut gpio = GpioImpl;
     gpio.pin_mode(LED, Output);
     gpio.digital_write(LED, High);
     delay_with_nop();
     gpio.digital_write(LED, Low);
     delay_with_nop();
 
-    let mut msg_reader = kbd::msg_reader::MsgReader::new();
-    let left_matrix = kbd::matrix::Matrix {
-        row_pins: &[
+    let mut left_matrix = kbd::matrix::Matrix::new(
+        GpioImpl,
+        &[ // rows
             // TODO
         ],
-        col_pins: &[
+        &[ // cols
             // TODO
-        ],
-    };
-    left_matrix.init();
+        ]
+    );
     let mut decoder = kbd::decoder::Decoder::new();
+
+    let mut buf = [0u8; 3];
+    let mut stream = FrameStream::new(Serial, &mut buf, |buf| {
+        Msg::read(buf)
+    });
 
     let mut right_keys = 0;
 
     loop {
-        while let Some(v) = wiring::serial_read() {
-            if let Some(scan) = msg_reader.read(v) {
-                right_keys = scan.0;
-            }
+        while let Async::Ready(v) = stream.poll().unwrap() {
+            right_keys = v.unwrap().0;
         }
         let left_keys = left_matrix.scan();
         decoder.update(left_keys, right_keys, |report| {
@@ -67,9 +77,9 @@ pub extern fn kbd_run_loop() {
             //wiring::debug_serial_write('u' as u8);
         });
 
-        wiring::digital_write(LED, High);
+        gpio.digital_write(LED, High);
         delay_with_nop();
-        wiring::digital_write(LED, Low);
+        gpio.digital_write(LED, Low);
         delay_with_nop();
         wiring::hid_send_report(4, &[0,0,0,0,0,0,0,0]);
         //wiring::send_key_report(wiring::KeyReport {
@@ -78,9 +88,9 @@ pub extern fn kbd_run_loop() {
             //keys: [0,0,0,0,0,0],
         //});
 
-        wiring::digital_write(LED, High);
+        gpio.digital_write(LED, High);
         delay_with_nop();
-        wiring::digital_write(LED, Low);
+        gpio.digital_write(LED, Low);
         delay_with_nop();
         wiring::hid_send_report(4, &[0,0,0xE9,0,0,0,0,0]);
         //wiring::send_key_report(wiring::KeyReport {

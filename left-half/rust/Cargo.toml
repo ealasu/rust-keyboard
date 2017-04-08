@@ -11,14 +11,11 @@ r0 = "0.2.0"
 volatile-register = "0.1.2"
 wiring = { path = "../../wiring" }
 kbd = { path = "../../kbd" }
+framed = { path = "../../framed" }
+futures = {version="*", default-features=false}
 
-[dependencies.cortex-m-semihosting]
-optional = true
-version = "0.1.1"
-
-[dependencies.compiler_builtins]
-features = ["mem"]
-git = "https://github.com/rust-lang-nursery/compiler-builtins"
+cortex-m-semihosting = {version = "0.1.1", optional = true}
+compiler_builtins = {git = "https://github.com/rust-lang-nursery/compiler-builtins", features = ["mem"]}
 
 [features]
 semihosting = ["cortex-m-semihosting"]

@@ -5,33 +5,33 @@ use wiring::gpio_impl::GpioImpl;
 pub struct Matrix<'a, G: Gpio> {
     row_pins: &'a [PinId],
     col_pins: &'a [PinId],
-    gpio: PhantomData<G>,
+    gpio: G,
 }
 
 impl<'a, G: Gpio> Matrix<'a, G> {
-    pub fn new(row_pins: &'a [PinId], col_pins: &'a [PinId]) -> Self {
+    pub fn new(mut gpio: G, row_pins: &'a [PinId], col_pins: &'a [PinId]) -> Self {
         for &pin in col_pins.iter() {
-            G::pin_mode(pin, PinMode::Input);
-            G::digital_write(pin, PinState::High); // TODO: make sure this enables pull-up
+            gpio.pin_mode(pin, PinMode::Input);
+            gpio.digital_write(pin, PinState::High); // TODO: make sure this enables pull-up
         }
         for &pin in row_pins.iter() {
-            G::pin_mode(pin, PinMode::Output);
-            G::digital_write(pin, PinState::High);
+            gpio.pin_mode(pin, PinMode::Output);
+            gpio.digital_write(pin, PinState::High);
         }
         Matrix {
             row_pins: row_pins,
             col_pins: col_pins,
-            gpio: PhantomData,
+            gpio: gpio,
         }
     }
 
-    pub fn scan(&self) -> u32 {
+    pub fn scan(&mut self) -> u32 {
         let mut res = 0;
         let mut key_idx = 0;
         for &row_pin in self.row_pins.iter() {
-            G::digital_write(row_pin, PinState::Low);
+            self.gpio.digital_write(row_pin, PinState::Low);
             for &col_pin in self.col_pins.iter() {
-                let state = G::digital_read(col_pin);
+                let state = self.gpio.digital_read(col_pin);
                 if state == PinState::High {
                     res |= 1 << key_idx;
                 }

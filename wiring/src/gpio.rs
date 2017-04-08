@@ -13,7 +13,7 @@ pub enum PinState {
 pub type PinId = u8;
 
 pub trait Gpio {
-    fn pin_mode(pin: PinId, mode: PinMode);
-    fn digital_write(pin: PinId, state: PinState);
-    fn digital_read(pin: PinId) -> PinState;
+    fn pin_mode(&mut self, pin: PinId, mode: PinMode);
+    fn digital_write(&mut self, pin: PinId, state: PinState);
+    fn digital_read(&self, pin: PinId) -> PinState;
 }

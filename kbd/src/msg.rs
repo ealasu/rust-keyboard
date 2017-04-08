@@ -2,7 +2,7 @@
 pub struct Msg(pub u32);
 
 impl Msg {
-    pub fn read(buf: &[u8; 3]) -> Msg {
+    pub fn read(buf: &[u8]) -> Msg {
         Msg(
             buf[0] as u32 |
             ((buf[1] as u32) << 8) |

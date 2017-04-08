@@ -4,17 +4,17 @@ pub struct GpioImpl;
 
 impl Gpio for GpioImpl {
     #[cfg(target_arch = "arm")]
-    fn pin_mode(pin: PinId, mode: PinMode) {
+    fn pin_mode(&mut self, pin: PinId, mode: PinMode) {
         unsafe { sys::pinMode(pin as u32, mode as u32) };
     }
 
     #[cfg(target_arch = "arm")]
-    fn digital_write(pin: PinId, state: PinState) {
+    fn digital_write(&mut self, pin: PinId, state: PinState) {
         unsafe { sys::digitalWrite(pin as u32, state as u32) };
     }
 
     #[cfg(target_arch = "arm")]
-    fn digital_read(pin: PinId) -> PinState {
+    fn digital_read(&self, pin: PinId) -> PinState {
         let v = unsafe { sys::digitalRead(pin as u32) };
         match v {
             v if v == PinState::Low as u32 => PinState::Low,
@@ -25,17 +25,17 @@ impl Gpio for GpioImpl {
 
 
     #[cfg(target_arch = "msp430")]
-    fn pin_mode(pin: PinId, mode: PinMode) {
+    fn pin_mode(&mut self, pin: PinId, mode: PinMode) {
         unsafe { sys::pinMode(pin as u8, mode as u8) };
     }
 
     #[cfg(target_arch = "msp430")]
-    fn digital_write(pin: PinId, state: PinState) {
+    fn digital_write(&mut self, pin: PinId, state: PinState) {
         unsafe { sys::digitalWrite(pin as u8, state as u8) };
     }
 
     #[cfg(target_arch = "msp430")]
-    fn digital_read(pin: PinId) -> PinState {
+    fn digital_read(&self, pin: PinId) -> PinState {
         let v = unsafe { sys::digitalRead(pin as u8) };
         match v {
             v if v == PinState::Low as u16 => PinState::Low,
@@ -46,17 +46,17 @@ impl Gpio for GpioImpl {
 
 
     #[cfg(not(any(target_arch = "arm", target_arch = "msp430")))]
-    fn pin_mode(_pin: PinId, _mode: PinMode) {
+    fn pin_mode(&mut self, _pin: PinId, _mode: PinMode) {
         unimplemented!()
     }
 
     #[cfg(not(any(target_arch = "arm", target_arch = "msp430")))]
-    fn digital_write(_pin: PinId, _state: PinState) {
+    fn digital_write(&mut self, _pin: PinId, _state: PinState) {
         unimplemented!()
     }
 
     #[cfg(not(any(target_arch = "arm", target_arch = "msp430")))]
-    fn digital_read(_pin: PinId) -> PinState {
+    fn digital_read(&self, _pin: PinId) -> PinState {
         unimplemented!()
     }
 }

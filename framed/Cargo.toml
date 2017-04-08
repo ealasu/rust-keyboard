@@ -1,0 +1,12 @@
+[package]
+name = "framed"
+version = "0.1.0"
+authors = ["eman <eman>"]
+
+[dependencies]
+crc8 = { path = "../crc8" }
+futures = {version="*", default-features=false}
+
+[features]
+#default = ["std"]
+std = ["futures/use_std"]

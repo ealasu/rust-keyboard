@@ -107,8 +107,6 @@ where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use core::fmt::Debug;
-    use futures::sink;
     use futures::Async;
     use super::super::sync_sink::SyncSink;
 

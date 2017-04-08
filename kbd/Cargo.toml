@@ -5,8 +5,7 @@ version = "0.1.0"
 [dependencies]
 crc8 = { path = "../crc8" }
 wiring = { path = "../wiring" }
-futures = {version="*", default-features=false}
 
 [features]
 #default = ["std"]
-std = ["wiring/std", "futures/use_std"]
+std = ["wiring/std"]

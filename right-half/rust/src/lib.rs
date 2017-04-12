@@ -11,7 +11,7 @@ pub mod lang_items;
 use wiring::gpio_impl::GpioImpl;
 use wiring::serial::Serial;
 use framed::sink::FrameSink;
-use kbd::msg::Msg;
+use kbd::keys::Keys;
 use futures::{Async, AsyncSink};
 use futures::sink::Sink;
 
@@ -33,14 +33,13 @@ pub extern fn kbd_run_loop() {
 
     let serial = Serial;
     let mut buf = [0u8; 5];
-    let mut sink = FrameSink::<_,Msg,_>::new(serial, |item, buf| {
-        buf.copy_from_slice(&item.write());
+    let mut sink = FrameSink::<_,Keys,_>::new(serial, |item, buf| {
+        item.write(buf);
     }, &mut buf);
 
     loop {
         let keys = matrix.scan();
-        let msg = Msg(keys);
-        while let AsyncSink::NotReady(_) = sink.start_send(msg).unwrap() {}
+        while let AsyncSink::NotReady(_) = sink.start_send(keys).unwrap() {}
         while let Async::NotReady = sink.poll_complete().unwrap() {}
 
         //wiring::digital_write(LED, wiring::PinState::High);

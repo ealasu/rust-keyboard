@@ -27,7 +27,7 @@ use wiring::gpio::{Gpio, PinId};
 use wiring::gpio::PinMode::*;
 use wiring::gpio::PinState::*;
 use wiring::serial::Serial;
-use kbd::msg::Msg;
+use kbd::keys::Keys;
 use kbd::decoder::KeyReport;
 use framed::stream::FrameStream;
 use futures::Async;
@@ -58,14 +58,14 @@ pub extern fn kbd_run_loop() {
 
     let mut buf = [0u8; 3];
     let mut stream = FrameStream::new(Serial, &mut buf, |buf| {
-        Msg::read(buf)
+        Keys::read(buf)
     });
 
-    let mut right_keys = 0;
+    let mut right_keys = Keys::none();
 
     loop {
         while let Async::Ready(v) = stream.poll().unwrap() {
-            right_keys = v.unwrap().0;
+            right_keys = v.unwrap();
 
             gpio.digital_write(LED, High);
             delay_with_nop();

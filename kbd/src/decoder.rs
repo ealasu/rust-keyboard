@@ -4,6 +4,7 @@
 //#[cfg(not(feature = "std"))] use core::slice;
 use core::mem;
 use core::slice;
+use keys::Keys;
 
 #[repr(C)]
 pub struct KeyReport {
@@ -20,7 +21,7 @@ impl Decoder {
         Decoder {}
     }
 
-    pub fn update<F>(&mut self, left: u32, right: u32, cb: F)
+    pub fn update<F>(&mut self, left: Keys, right: Keys, cb: F)
     where F: FnOnce(KeyReport) {
         let report = KeyReport {
           reserved: 0,

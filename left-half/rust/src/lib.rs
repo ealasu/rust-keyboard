@@ -55,12 +55,8 @@ pub extern fn kbd_run_loop() {
         ]
     );
     let mut decoder = kbd::decoder::Decoder::new();
-
-    let mut buf = [0u8; 3];
-    let mut stream = FrameStream::new(Serial, &mut buf, |buf| {
-        Keys::read(buf)
-    });
-
+    let mut buf = [0u8; 4];
+    let mut stream = FrameStream::new(Serial, &mut buf, |buf| Keys::read(buf));
     let mut right_keys = Keys::none();
 
     loop {

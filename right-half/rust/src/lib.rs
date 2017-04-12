@@ -32,7 +32,7 @@ pub extern fn kbd_run_loop() {
     );
 
     let serial = Serial;
-    let mut buf = [0u8; 5];
+    let mut buf = [0u8; 6];
     let mut sink = FrameSink::<_,Keys,_>::new(serial, |item, buf| {
         item.write(buf);
     }, &mut buf);

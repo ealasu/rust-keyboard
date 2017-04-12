@@ -1,7 +1,3 @@
-//#[cfg(feature = "std")] use std::mem;
-//#[cfg(feature = "std")] use std::slice;
-//#[cfg(not(feature = "std"))] use core::mem;
-//#[cfg(not(feature = "std"))] use core::slice;
 use core::mem;
 use core::slice;
 use keys::Keys;

@@ -83,7 +83,7 @@ static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
   0x09, 0x01,                 /* usage -- consumer control */
   0xA1, 0x01,                 /* collection (application) */
   0x85, 4,     /* report id */
-  /* 4 Media Keys */
+  /* 4 Media keys */
   0x15, 0x00,                 /* logical minimum */
   0x26, 0xFF, 0x03,               /* logical maximum (3ff) */
   0x19, 0x00,                 /* usage minimum (0) */

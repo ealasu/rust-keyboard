@@ -1,8 +1,9 @@
 use core::marker::PhantomData;
 use wiring::gpio::{Gpio, PinId, PinMode, PinState};
 use wiring::gpio_impl::GpioImpl;
+use keys::Keys;
 
-pub struct Matrix<'a, G: Gpio> {
+pub struct Matrix<'a, G> {
     row_pins: &'a [PinId],
     col_pins: &'a [PinId],
     gpio: G,
@@ -25,15 +26,15 @@ impl<'a, G: Gpio> Matrix<'a, G> {
         }
     }
 
-    pub fn scan(&mut self) -> u32 {
-        let mut res = 0;
+    pub fn scan(&mut self) -> Keys {
+        let mut res = Keys::none();
         let mut key_idx = 0;
         for &row_pin in self.row_pins.iter() {
             self.gpio.digital_write(row_pin, PinState::Low);
             for &col_pin in self.col_pins.iter() {
                 let state = self.gpio.digital_read(col_pin);
                 if state == PinState::High {
-                    res |= 1 << key_idx;
+                    res.set_key(key_idx, true);
                 }
                 key_idx += 1;
             }
@@ -48,11 +49,12 @@ mod tests {
     use wiring::gpio_mock::GpioMock;
 
     #[test]
-    fn test() {
+    fn none() {
+        let gpio = GpioMock;
         let row_pins = [1,2];
         let col_pins = [3,4];
-        let unit = Matrix::<GpioMock>::new(&row_pins, &col_pins);
+        let mut unit = Matrix::new(gpio, &row_pins, &col_pins);
         let res = unit.scan();
-        assert_eq!(res, 0);
+        assert_eq!(res, Keys::none());
     }
 }

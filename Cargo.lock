@@ -6,6 +6,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "bit_field"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "byteorder"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "compiler_builtins"
 version = "0.1.0"
 source = "git+https://github.com/rust-lang-nursery/compiler-builtins#0507842b248b29d18855042544cf209371ea17c1"
@@ -47,6 +57,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "kbd"
 version = "0.1.0"
 dependencies = [
+ "bit_field 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "byteorder 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "wiring 0.1.0",
 ]
 
@@ -91,6 +103,8 @@ version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
+"checksum bit_field 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ff91a64014e1bc53bf643920f2c9ab5f0980d92a0948295f3ee550e9266849ad"
+"checksum byteorder 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c40977b0ee6b9885c9013cd41d9feffdd22deb3bb4dc3a71d901cc7a77de18c8"
 "checksum compiler_builtins 0.1.0 (git+https://github.com/rust-lang-nursery/compiler-builtins)" = "<none>"
 "checksum cortex-m 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)" = "f636846f87391b548e55be42a3f787c76348288f8716486a7e184004b745c62d"
 "checksum cortex-m-semihosting 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "b8d27ed287c929f8f4fb30832c5e4c255c0d055a99c6b9855158f227b49f4972"

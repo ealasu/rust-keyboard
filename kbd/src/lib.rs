@@ -2,8 +2,10 @@
 
 #[cfg(feature = "std")] extern crate core;
 extern crate wiring;
+extern crate bit_field;
+extern crate byteorder;
 
-pub mod msg;
+pub mod keys;
 pub mod matrix;
 pub mod decoder;
 pub mod keycode;

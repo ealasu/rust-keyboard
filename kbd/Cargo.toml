@@ -4,6 +4,8 @@ version = "0.1.0"
 
 [dependencies]
 wiring = { path = "../wiring" }
+bit_field = "*"
+byteorder = { version = "*", default-features = false }
 
 [features]
 #default = ["std"]

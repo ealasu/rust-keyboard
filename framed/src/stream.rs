@@ -95,7 +95,8 @@ where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
                                 let res = (self.decoder)(payload);
                                 return Ok(Async::Ready(Some(res)));
                             } else {
-                                panic!("crc: {}, expected: {}", actual_crc, expected_crc);
+                                // ignore frame
+                                // TODO: debug!("crc: {}, expected: {}", actual_crc, expected_crc);
                             }
                         } else {
                             self.state = State::Payload { len: len, esc: false };
@@ -120,6 +121,14 @@ mod tests {
         run_test(
             &[&[1,2,3], &[4,5,6]],
             &[9,8,SOF,1,2,3,216,7,6,SOF,4,5,6,188,5,4]
+        );
+    }
+
+    #[test]
+    fn corrupt_frame() {
+        run_test(
+            &[&[4,5,6]],
+            &[9,8,SOF,1,2,3,215,7,6,SOF,4,5,6,188,5,4]
         );
     }
 

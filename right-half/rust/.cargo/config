@@ -1,2 +1,2 @@
 [build]
-target = "msp430"
+target = "msp430-none-elf"

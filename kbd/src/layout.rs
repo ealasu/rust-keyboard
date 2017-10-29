@@ -41,14 +41,14 @@ macro_rules! keyboard_layout {
   };
 }
 
-pub type Layout = [[[Option<KeyCode>; 4]; 10]; 2];
+pub type Layout = [[[Option<KeyCode>; 4]; 12]; 4];
 
-const FN_LAYOUT: Layout = keyboard_layout![
-  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  [[ ], [TAB], [ ], [SHIFT], [ ], [ ], [ ], [ ], [FN], [ ], [ ], [ ]],
-];
+//const FN_LAYOUT: Layout = keyboard_layout![
+  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  //[[ ], [TAB], [ ], [SHIFT], [ ], [ ], [ ], [ ], [FN], [ ], [ ], [ ]],
+//];
 
 const QWERTY_LAYOUT_1: Layout = keyboard_layout![
   [[Q], [W], [E], [R], [T], [ ], [ ], [Y], [U], [I], [O], [P]],

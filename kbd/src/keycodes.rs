@@ -79,6 +79,25 @@ keycodes_keyboard! {
   NON_US_NUM      = 50;
   SEMICOLON       = 51;
   QUOTE           = 52;
+  TILDE           = 53;
+  COMMA           = 54;
+  DOT             = 55;
+  SLASH           = 56;
+  CAPSLOCK        = 57;
+  F1              = 58;
+  F2              = 59;
+  F3              = 60;
+  F4              = 61;
+  F5              = 62;
+  F6              = 63;
+  F7              = 64;
+  F8              = 65;
+  F9              = 66;
+  F10             = 67;
+  F11             = 68;
+  F12             = 69;
+
+  SUPER = 101;
 }
 
 keycodes_media! {

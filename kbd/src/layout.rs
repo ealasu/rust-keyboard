@@ -43,11 +43,29 @@ macro_rules! keyboard_layout {
 
 pub type Layout = [[[Option<KeyCode>; 4]; 10]; 2];
 
-const QWERTY_LAYOUT: Layout = keyboard_layout![
-  [[Q], [W], [E], [R], [T], [Y], [U], [I], [O], [P]], 
-  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]], 
-  //[[Q | LEFT_SHIFT]],
+const FN_LAYOUT: Layout = keyboard_layout![
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [TAB], [ ], [SHIFT], [ ], [ ], [ ], [ ], [FN], [ ], [ ], [ ]],
 ];
+
+const QWERTY_LAYOUT_1: Layout = keyboard_layout![
+  [[Q], [W], [E], [R], [T], [ ], [ ], [Y], [U], [I], [O], [P]],
+  [[A], [S], [D], [F], [G], [ ], [ ], [H], [J], [K], [L], [SEMICOLON]],
+  [[Z], [X], [C], [V], [B], [ ], [ ], [N], [M], [COMMA], [DOT], [SLASH]],
+  [[ESC], [TAB], [SUPER], [LEFT_SHIFT], [BACKSPACE],
+    [LEFT_CTRL], [LEFT_ALT],
+    [SPACE], [ ], [MINUS], [QUOTE], [ENTER]],
+];
+
+const QWERTY_LAYOUT_2: Layout = keyboard_layout![
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+  [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+];
+
 
 #[cfg(test)]
 mod tests {

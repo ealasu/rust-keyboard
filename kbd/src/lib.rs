@@ -1,7 +1,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![feature(conservative_impl_trait)]
 
-#[cfg(feature = "std")] extern crate core;
+#[cfg(feature = "std")]
+extern crate core;
 extern crate wiring;
 extern crate bit_field;
 extern crate byteorder;

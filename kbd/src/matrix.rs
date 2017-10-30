@@ -51,8 +51,8 @@ mod tests {
     #[test]
     fn none() {
         let gpio = GpioMock;
-        let row_pins = [1,2];
-        let col_pins = [3,4];
+        let row_pins = [1, 2];
+        let col_pins = [3, 4];
         let mut unit = Matrix::new(gpio, &row_pins, &col_pins);
         let res = unit.scan();
         assert_eq!(res, Keys::none());

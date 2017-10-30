@@ -24,7 +24,7 @@ macro_rules! keyboard_layout {
     $(
       [
         $(
-           $key:tt 
+           $key:tt
         ),+
       ],
     )+
@@ -44,13 +44,14 @@ macro_rules! keyboard_layout {
 pub type Layout = [[[Option<KeyCode>; 4]; 12]; 4];
 
 //const FN_LAYOUT: Layout = keyboard_layout![
-  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  //[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
-  //[[ ], [TAB], [ ], [SHIFT], [ ], [ ], [ ], [ ], [FN], [ ], [ ], [ ]],
+//[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+//[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+//[[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
+//[[ ], [TAB], [ ], [SHIFT], [ ], [ ], [ ], [ ], [FN], [ ], [ ], [ ]],
 //];
 
-const QWERTY_LAYOUT_1: Layout = keyboard_layout![
+const QWERTY_LAYOUT_1: Layout =
+    keyboard_layout![
   [[Q], [W], [E], [R], [T], [ ], [ ], [Y], [U], [I], [O], [P]],
   [[A], [S], [D], [F], [G], [ ], [ ], [H], [J], [K], [L], [SEMICOLON]],
   [[Z], [X], [C], [V], [B], [ ], [ ], [N], [M], [COMMA], [DOT], [SLASH]],
@@ -59,7 +60,8 @@ const QWERTY_LAYOUT_1: Layout = keyboard_layout![
     [SPACE], [ ], [MINUS], [QUOTE], [ENTER]],
 ];
 
-const QWERTY_LAYOUT_2: Layout = keyboard_layout![
+const QWERTY_LAYOUT_2: Layout =
+    keyboard_layout![
   [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
   [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
   [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]],
@@ -69,16 +71,21 @@ const QWERTY_LAYOUT_2: Layout = keyboard_layout![
 
 #[cfg(test)]
 mod tests {
-  use super::*;
+    use super::*;
 
-  #[test]
-  fn test() {
-    let layout = keyboard_layout![
+    #[test]
+    fn test() {
+        let layout =
+            keyboard_layout![
       [[Q], [ ], [E | LEFT_SHIFT]],
     ];
-    let expected = [
-      [[Some(Q), None, None, None], [None, None, None, None], [Some(E), Some(LEFT_SHIFT), None, None]]
-    ];
-    assert_eq!(&layout[..], &expected[..]);
-  }
+        let expected = [
+            [
+                [Some(Q), None, None, None],
+                [None, None, None, None],
+                [Some(E), Some(LEFT_SHIFT), None, None],
+            ],
+        ];
+        assert_eq!(&layout[..], &expected[..]);
+    }
 }

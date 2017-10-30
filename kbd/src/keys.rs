@@ -41,7 +41,7 @@ impl Keys {
     }
 
     #[inline]
-    pub fn on<'a>(&'a self) -> impl Iterator<Item=Index> + 'a {
+    pub fn on<'a>(&'a self) -> impl Iterator<Item = Index> + 'a {
         (0..Self::len()).filter(move |&i| self.key(i))
     }
 }

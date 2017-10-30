@@ -10,23 +10,20 @@ pub struct KeyReport {
 }
 
 pub struct Decoder {
+
 }
 
 impl Decoder {
-    pub fn new() -> Self {
-        Decoder {}
-    }
+  pub fn new() -> Self {
+    Decoder {}
+  }
 
-    pub fn update<F>(&mut self, left: Keys, right: Keys, cb: F)
-    where F: FnOnce(KeyReport) {
-        let report = KeyReport {
-          reserved: 0,
-          modifiers: 0,
-          keys: [0,0,0,0,0,0],
-        };
-        cb(report);
-        //let report_ptr: *const KeyReport = &report;
-        //let data = unsafe { slice::from_raw_parts(report_ptr as *const u8, mem::size_of::<KeyReport>()) };
-        //cb(data);
-    }
+  pub fn update(&mut self, left: Keys, right: Keys, cb: F) -> Option<KeyReport> {
+    let report = KeyReport {
+      modifiers: 0,
+      reserved: 0,
+      keys: [0,0,0,0,0,0],
+    };
+    Some(report)
+  }
 }

@@ -69,14 +69,14 @@ pub extern fn kbd_run_loop() {
             delay_with_nop();
         }
         let left_keys = left_matrix.scan();
-        decoder.update(left_keys, right_keys, |report| {
+        if let Some(report) = decoder.update(left_keys, right_keys) {
             let report_ptr: *const KeyReport = &report;
             let data = unsafe {
                 slice::from_raw_parts(report_ptr as *const u8, mem::size_of::<KeyReport>())
             };
             //wiring::hid_send_report(data);
             //wiring::debug_serial_write('u' as u8);
-        });
+        }
 
         //gpio.digital_write(LED, High);
         //delay_with_nop();

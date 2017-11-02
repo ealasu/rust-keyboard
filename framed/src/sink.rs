@@ -1,15 +1,7 @@
 use core::marker::PhantomData;
 use futures::{Poll, Async, AsyncSink, StartSend};
 use futures::sink::Sink;
-use super::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
-
-macro_rules! try_send {
-    ($e:expr) => (match $e {
-        Ok(::futures::AsyncSink::Ready) => {},
-        Ok(::futures::AsyncSink::NotReady(_)) => return Ok(::futures::Async::NotReady),
-        Err(e) => return Err(From::from(e)),
-    })
-}
+use constants::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
 
 enum State {
     Empty,
@@ -108,7 +100,7 @@ where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
 mod tests {
     use super::*;
     use futures::Async;
-    use super::super::sync_sink::SyncSink;
+    use sync_sink::SyncSink;
 
     include!("common_tests.rs");
 

@@ -1,15 +1,6 @@
 use futures::{Poll, Async};
 use futures::stream::Stream;
-use super::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
-
-macro_rules! try_poll {
-    ($e:expr) => (match $e {
-        Ok(::futures::Async::Ready(Some(t))) => t,
-        Ok(::futures::Async::Ready(None)) => return Ok(::futures::Async::Ready(None)),
-        Ok(::futures::Async::NotReady) => return Ok(::futures::Async::NotReady),
-        Err(e) => return Err(From::from(e)),
-    })
-}
+use constants::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
 
 #[derive(Debug)]
 enum State {
@@ -108,11 +99,11 @@ where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
     }
 }
 
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use futures::stream;
-    use futures::Async;
+    use futures::{stream, Async};
 
     include!("common_tests.rs");
 
@@ -159,7 +150,7 @@ mod tests {
     }
 
     fn run_test(expected: &[&[u8]], data: &[u8]) {
-        let inner = stream::iter::<_, _, ()>(data.iter().map(|it| Ok(*it)));
+        let inner = stream::iter_ok::<_, ()>(data.iter().map(|&v| v));
         let mut buf = [0u8; 4];
         let mut expected_iter = expected.iter();
         let mut unit = FrameStream::new(inner, &mut buf, |buf| {

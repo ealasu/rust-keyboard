@@ -4,8 +4,11 @@ use futures::sink::Sink;
 use constants::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
 
 enum State {
+    /// Nothing to write
     Empty,
+    /// `pos` bytes remaining to be written
     Data { pos: usize },
+    /// Just sent ESC, so next byte will be escaped (either ESC_SOF or ESC_ESC)
     AfterEsc { escaped: u8, pos: usize },
 }
 
@@ -18,7 +21,10 @@ pub struct FrameSink<'a, Inner, Item, F> {
 }
 
 impl<'a, Inner, Item, F> FrameSink<'a, Inner, Item, F>
-where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
+where
+    Inner: Sink<SinkItem = u8>,
+    F: FnMut(Item, &mut [u8]),
+{
     pub fn new(inner: Inner, encoder: F, buf: &'a mut [u8]) -> Self {
         Self {
             inner: inner,
@@ -31,7 +37,10 @@ where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
 }
 
 impl<'a, Inner, Item, F> Sink for FrameSink<'a, Inner, Item, F>
-where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
+where
+    Inner: Sink<SinkItem = u8>,
+    F: FnMut(Item, &mut [u8]),
+{
     type SinkItem = Item;
     type SinkError = Inner::SinkError;
 
@@ -51,7 +60,7 @@ where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
                 //self.poll_complete()?;
                 Ok(AsyncSink::Ready)
             }
-            _ => Ok(AsyncSink::NotReady(item))
+            _ => Ok(AsyncSink::NotReady(item)),
         }
     }
 
@@ -76,17 +85,15 @@ where Inner: Sink<SinkItem=u8>, F: FnMut(Item, &mut [u8]) {
                             escaped: match v {
                                 SOF => ESC_SOF,
                                 ESC => ESC_ESC,
-                                _ => unreachable!()
-                            }
+                                _ => unreachable!(),
+                            },
                         };
                     } else {
                         try_send!(self.inner.start_send(v));
                         self.state = State::Data { pos: pos + 1 };
                     }
                 }
-                State::Empty => {
-                    return self.inner.poll_complete()
-                }
+                State::Empty => return self.inner.poll_complete(),
             }
         }
     }
@@ -111,9 +118,8 @@ mod tests {
                 assert_eq!(actual_byte, *expected_bytes.next().unwrap());
             });
             let mut buf = [0u8; 5];
-            let mut unit = FrameSink::new(sink, |item, buf| {
-                buf.copy_from_slice(item);
-            }, &mut buf);
+            let mut unit =
+                FrameSink::new(sink, |item, buf| { buf.copy_from_slice(item); }, &mut buf);
             for frame in frames.into_iter() {
                 assert_eq!(unit.start_send(frame).unwrap(), AsyncSink::Ready);
                 assert_eq!(unit.poll_complete().unwrap(), Async::Ready(()));

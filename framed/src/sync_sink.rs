@@ -7,8 +7,10 @@ pub struct SyncSink<Item, F> {
     f: F,
 }
 
-impl<Item,F> SyncSink<Item,F>
-where F: FnMut(Item) {
+impl<Item, F> SyncSink<Item, F>
+where
+    F: FnMut(Item),
+{
     pub fn new(f: F) -> Self {
         Self {
             _item: PhantomData,
@@ -17,8 +19,10 @@ where F: FnMut(Item) {
     }
 }
 
-impl<Item,F> Sink for SyncSink<Item,F>
-where F: FnMut(Item) {
+impl<Item, F> Sink for SyncSink<Item, F>
+where
+    F: FnMut(Item),
+{
     type SinkItem = Item;
     type SinkError = ();
 

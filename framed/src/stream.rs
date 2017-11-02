@@ -4,12 +4,12 @@ use constants::{SOF, ESC, ESC_SOF, ESC_ESC, CRC};
 
 #[derive(Debug)]
 enum State {
-    Sof, /// Start-Of-Frame
+    /// Scanning for Start-Of-Frame byte.
+    Sof,
+    /// Recieved a Start-Of-Frame byte.
     AfterSof,
-    Payload {
-        len: usize,
-        esc: bool
-    },
+    /// Read `len` bytes of the payload. If `esc`, next byte will be un-escaped.
+    Payload { len: usize, esc: bool },
 }
 
 pub struct FrameStream<'a, Inner, F> {
@@ -20,7 +20,9 @@ pub struct FrameStream<'a, Inner, F> {
 }
 
 impl<'a, Inner, Item, F> FrameStream<'a, Inner, F>
-where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
+where
+    Inner: Stream<Item = u8>,
+    F: FnMut(&[u8]) -> Item,
 {
     pub fn new(inner: Inner, buf: &'a mut [u8], decoder: F) -> Self {
         Self {
@@ -33,7 +35,9 @@ where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
 }
 
 impl<'a, Inner, Item, F> Stream for FrameStream<'a, Inner, F>
-where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
+where
+    Inner: Stream<Item = u8>,
+    F: FnMut(&[u8]) -> Item,
 {
     type Item = Item;
     type Error = Inner::Error;
@@ -66,15 +70,20 @@ where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
                 State::Payload { len, esc } => {
                     let v = try_poll!(self.inner.poll());
                     if v == ESC {
-                        self.state = State::Payload { len: len, esc: true };
+                        self.state = State::Payload {
+                            len: len,
+                            esc: true,
+                        };
                     } else {
                         let v = if esc {
                             match v {
                                 ESC_SOF => SOF,
                                 ESC_ESC => ESC,
-                                _ => v
+                                _ => v,
                             }
-                        } else { v };
+                        } else {
+                            v
+                        };
                         self.buf[len] = v;
                         let len = len + 1;
                         if len == self.buf.len() {
@@ -90,7 +99,10 @@ where Inner: Stream<Item=u8>, F: FnMut(&[u8]) -> Item
                                 // TODO: debug!("crc: {}, expected: {}", actual_crc, expected_crc);
                             }
                         } else {
-                            self.state = State::Payload { len: len, esc: false };
+                            self.state = State::Payload {
+                                len: len,
+                                esc: false,
+                            };
                         }
                     }
                 }
@@ -110,43 +122,37 @@ mod tests {
     #[test]
     fn junk_between_frames() {
         run_test(
-            &[&[1,2,3], &[4,5,6]],
-            &[9,8,SOF,1,2,3,216,7,6,SOF,4,5,6,188,5,4]
+            &[&[1, 2, 3], &[4, 5, 6]],
+            &[9, 8, SOF, 1, 2, 3, 216, 7, 6, SOF, 4, 5, 6, 188, 5, 4],
         );
     }
 
     #[test]
     fn corrupt_frame() {
         run_test(
-            &[&[4,5,6]],
-            &[9,8,SOF,1,2,3,215,7,6,SOF,4,5,6,188,5,4]
+            &[&[4, 5, 6]],
+            &[9, 8, SOF, 1, 2, 3, 215, 7, 6, SOF, 4, 5, 6, 188, 5, 4],
         );
     }
 
     #[test]
     fn multiple_sofs() {
         run_test(
-            &[&[1,2,3], &[4,5,6]],
-            &[SOF,SOF,1,2,3,216,SOF,SOF,SOF,4,5,6,188]
+            &[&[1, 2, 3], &[4, 5, 6]],
+            &[SOF, SOF, 1, 2, 3, 216, SOF, SOF, SOF, 4, 5, 6, 188],
         );
     }
 
     #[test]
     fn esc_in_stream() {
         // not supposed to happen, but should be handled
-        run_test(
-            &[&[1,2,3]],
-            &[SOF,1,ESC,2,3,216]
-        );
+        run_test(&[&[1, 2, 3]], &[SOF, 1, ESC, 2, 3, 216]);
     }
 
     #[test]
     fn esc_esc_in_stream() {
         // not supposed to happen, but should be handled
-        run_test(
-            &[&[1,2,3]],
-            &[SOF,1,ESC,ESC,2,3,216]
-        );
+        run_test(&[&[1, 2, 3]], &[SOF, 1, ESC, ESC, 2, 3, 216]);
     }
 
     fn run_test(expected: &[&[u8]], data: &[u8]) {

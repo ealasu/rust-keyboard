@@ -12,7 +12,7 @@ volatile-register = "*"
 wiring = { path = "../../wiring" }
 kbd = { path = "../../kbd" }
 framed = { path = "../../framed" }
-futures = {version="*", default-features=false}
+futures = {path="/Users/emi/repos/futures-rs", version="*", default-features=false, features = ["nightly"]}
 
 cortex-m-semihosting = {version = "*", optional = true}
 compiler_builtins = {git = "https://github.com/rust-lang-nursery/compiler-builtins", features = ["mem"]}

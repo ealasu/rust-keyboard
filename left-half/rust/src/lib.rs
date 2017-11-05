@@ -8,7 +8,6 @@
 #[macro_use]
 extern crate cortex_m_semihosting;
 extern crate compiler_builtins;
-#[macro_use]
 extern crate cortex_m;
 extern crate wiring;
 extern crate kbd;
@@ -54,7 +53,6 @@ pub extern fn kbd_run_loop() {
             // TODO
         ]
     );
-    let mut decoder = kbd::decoder::Decoder::new();
     let mut buf = [0u8; 4];
     let mut stream = FrameStream::new(Serial, &mut buf, |buf| Keys::read(buf));
     let mut right_keys = Keys::none();
@@ -70,11 +68,8 @@ pub extern fn kbd_run_loop() {
         }
         let left_keys = left_matrix.scan();
         if let Some(report) = decoder.update(left_keys, right_keys) {
-            let report_ptr: *const KeyReport = &report;
-            let data = unsafe {
-                slice::from_raw_parts(report_ptr as *const u8, mem::size_of::<KeyReport>())
-            };
-            //wiring::hid_send_report(data);
+            let report_bytes = as_bytes(&report);
+            wiring::hid_send_report(2, report_bytes);
             //wiring::debug_serial_write('u' as u8);
         }
 
@@ -108,4 +103,10 @@ fn delay_with_nop() {
     }
 }
 
+fn as_bytes<T>(v: &T) -> &[u8] {
+    let ptr: *const T = v;
+    unsafe {
+        slice::from_raw_parts(ptr as *const u8, mem::size_of::<T>())
+    }
+}
 

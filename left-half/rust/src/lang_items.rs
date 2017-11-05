@@ -1,4 +1,5 @@
 use core::fmt::Arguments;
+use cortex_m::asm::bkpt;
 
 #[lang = "panic_fmt"]
 #[no_mangle]
@@ -17,7 +18,7 @@ pub unsafe extern "C" fn panic_fmt(_args: Arguments,
     }
     hprintln!("', {}:{}", _file, _line);
 
-    bkpt!();
+    bkpt();
 
     loop {}
 }

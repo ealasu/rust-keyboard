@@ -12,4 +12,6 @@ pub mod matrix;
 pub mod decoder;
 pub mod keycode;
 pub mod keycodes;
+#[macro_use]
 pub mod layout;
+pub mod qwerty;

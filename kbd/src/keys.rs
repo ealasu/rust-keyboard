@@ -2,16 +2,25 @@ use core::mem;
 use bit_field::BitField;
 use byteorder::{ByteOrder, LittleEndian as LE};
 
+pub const COLS: usize = 12;
+pub const ROWS: usize = 4;
+
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Keys(u32);
+pub struct Keys32(u32);
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TwoHandKeys {
+    left: Keys32,
+    right: Keys32,
+}
 
 pub type Index = u8;
 
-impl Keys {
+impl SingleHandKeys {
     /// Create a `Keys` with all keys off
     #[inline]
     pub fn none() -> Self {
-        Keys(0)
+        Self(0)
     }
 
     /// Total number of keys
@@ -22,7 +31,7 @@ impl Keys {
 
     #[inline]
     pub fn read(buf: &[u8]) -> Self {
-        Keys(LE::read_u32(buf))
+        Self(LE::read_u32(buf))
     }
 
     #[inline]
@@ -38,6 +47,12 @@ impl Keys {
     #[inline]
     pub fn set_key(&mut self, index: Index, state: bool) {
         self.0.set_bit(index, state);
+    }
+}
+
+impl FullKeys {
+    pub const fn len() -> Index {
+        48
     }
 
     #[inline]
